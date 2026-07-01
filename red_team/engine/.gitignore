@@ -1,0 +1,9 @@
+# Generated synthetic datasets — reproducible from a seed, not tracked.
+datasets/*/
+datasets/*.json
+datasets/*.md
+!datasets/.gitkeep
+
+__pycache__/
+*.pyc
+.venv/

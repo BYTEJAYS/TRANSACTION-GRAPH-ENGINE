@@ -1,0 +1,64 @@
+# BLING Blue Team — Pinned dependencies
+# Run: pip install -r requirements.txt
+# Dev-only tools (pytest, ruff): requirements-dev.txt
+
+# API
+fastapi==0.111.0
+uvicorn[standard]==0.29.0
+pydantic==2.7.1
+pydantic-settings==2.2.1
+python-multipart==0.0.9
+
+# Database
+sqlalchemy==2.0.30
+alembic==1.13.1
+psycopg2-binary==2.9.9
+
+# Neo4j
+neo4j==5.20.0
+
+# Redis / Celery
+redis==5.0.4
+celery==5.4.0
+kombu==5.3.4
+
+# ML
+xgboost==2.0.3
+shap==0.44.1
+scikit-learn==1.4.2
+faiss-cpu==1.8.0
+pandas==2.2.2
+numpy==1.26.4
+
+# Retry / circuit breaker
+tenacity==8.3.0
+
+# Graph algorithms
+networkx==3.3
+joblib==1.4.2
+
+# Graph layer (Leiden community detection + Node2Vec embeddings)
+leidenalg==0.10.2
+igraph==0.11.6
+node2vec==0.4.6
+
+# Anomaly detection (discovery pipeline — PASS stream only)
+pyod==2.0.2
+
+# Committee engine
+mapie>=0.8.0
+sentence-transformers>=2.7.0
+
+# Observability
+structlog==24.1.0
+prometheus-client==0.20.0
+prometheus-fastapi-instrumentator==7.0.0
+
+# Rate limiting
+slowapi==0.1.9
+
+# JWT RS256 auth
+PyJWT[crypto]==2.8.0
+
+# HTTP client
+httpx==0.27.0

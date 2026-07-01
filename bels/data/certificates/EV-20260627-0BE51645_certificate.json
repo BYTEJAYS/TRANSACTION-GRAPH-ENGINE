@@ -1,0 +1,22 @@
+{
+  "certificate_type": "BELS Evidence Verification Certificate",
+  "evidence_id": "EV-20260627-0BE51645",
+  "case_id": "TGIE-2026-0009",
+  "file_hash_sha256": "3b504d66db7f63d2d26674ced593a7da9b59aa4019adcea4da2d0d6e8107b018",
+  "metadata_hash": "4f2e2132a6cb79d544c84b73ecd01e01c4c1cda47304193562fe979802620540",
+  "registered_at": "2026-06-27T06:04:40.945602+00:00",
+  "owner": "Tester",
+  "blockchain": {
+    "provider": "internal",
+    "chain_id": "tgie-bels-devnet-1",
+    "anchor_tx_id": "0x9011162920dd47e39a58e801bcdde51b",
+    "block_index": 1,
+    "block_hash": "0000ed479249373c196dcb675ce9bd7191b4463a8ef635af5e24e28eb58a3848"
+  },
+  "signature": {
+    "scheme": "hmac-sha256",
+    "signer_key_id": "3e6e33fc370a3952"
+  },
+  "issued_at": "2026-06-27T06:04:40.953161+00:00",
+  "statement": "This certificate attests that the above evidence hash was anchored to the ledger at the stated time and can be independently verified against block 0000ed479249373c."
+}

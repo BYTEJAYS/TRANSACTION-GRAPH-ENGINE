@@ -1,0 +1,30 @@
+[
+  {
+    "from_account": "acc_72324bbe46",
+    "to_account": "acc_b3d82cce4b",
+    "amount": 23640,
+    "payment_rail": "p2p_transfer",
+    "timestamp": "2026-05-01T10:00:00"
+  },
+  {
+    "from_account": "acc_baa141aabe",
+    "to_account": "acc_b3d82cce4b",
+    "amount": 23505,
+    "payment_rail": "p2p_transfer",
+    "timestamp": "2026-05-01T13:00:00"
+  },
+  {
+    "from_account": "acc_2b8846edce",
+    "to_account": "acc_b3d82cce4b",
+    "amount": 24350,
+    "payment_rail": "p2p_transfer",
+    "timestamp": "2026-05-01T16:00:00"
+  },
+  {
+    "from_account": "acc_b3d82cce4b",
+    "to_account": "acc_2666432bb9",
+    "amount": 69350,
+    "payment_rail": "p2p_transfer",
+    "timestamp": "2026-05-01T16:00:00"
+  }
+]

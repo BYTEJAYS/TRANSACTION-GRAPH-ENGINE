@@ -1,0 +1,13 @@
+{
+  "generated_at": "2026-06-26T12:35:16",
+  "modules": {
+    "backend/": "TGIE core engine: graph_engine, simulator, blue_team(V1), blue_team_v2(11 detectors), anomaly_detection, api, ml, streaming, ub_service",
+    "frontend/": "Vite SPA: GraphScene.tsx (3D graph), ai/ (risk intel + UB), components/, ub_dashboard/",
+    "ub/": "Universal Brain: ai_core, knowledge_engine, ollama_service, data/, scripts/, cli.py",
+    "blue_team/bling/": "BLING Blue Team API (Union Bank): detection, evidence(PDF), graph(Neo4j), ml bridges",
+    "red_team/adversarial/": "Red\u21c4Blue self-play: agents, evolutionary_engine, quality_diversity, rl_agent, graph_gan, self_play, integration, reports/",
+    "red_team/crucible/": "CRUCIBLE evolutionary fraud-genome engine + human gate + prophecy",
+    "docs/": "Analysis, audits, architecture, readiness, UB_* docs",
+    "deployment/": "railway.toml, nixpacks.toml, docker-compose, launchers, infrastructure/"
+  }
+}

@@ -1,0 +1,4 @@
+{"action": "case.create", "actor": "system", "role": "investigator", "target": "TGIE-2026-0009", "title": "Auto case TGIE-2026-0009", "ts": "2026-06-27T06:04:40.952959+00:00"}
+{"action": "evidence.register_hash", "actor": "Tester", "case_id": "TGIE-2026-0009", "role": "investigator", "target": "EV-20260627-0BE51645", "ts": "2026-06-27T06:04:40.953080+00:00"}
+{"action": "evidence.verify", "actor": "Tester", "outcome": "VERIFIED", "role": "auditor", "target": "EV-20260627-0BE51645", "ts": "2026-06-27T06:04:40.972052+00:00"}
+{"action": "evidence.verify", "actor": "Tester", "outcome": "VERIFIED", "role": "auditor", "target": "EV-20260627-0BE51645", "ts": "2026-06-27T06:04:40.996424+00:00"}

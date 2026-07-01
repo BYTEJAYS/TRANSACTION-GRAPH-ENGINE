@@ -1,0 +1,14 @@
+{
+  "risk_ensemble": {
+    "active": "v1",
+    "versions": [
+      "v1"
+    ]
+  },
+  "drift_baseline": {
+    "active": "v1",
+    "versions": [
+      "v1"
+    ]
+  }
+}

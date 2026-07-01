@@ -1,0 +1,58 @@
+[
+  {
+    "from_account": "acc_f007001abc",
+    "to_account": "acc_f007c01abc",
+    "amount": 18500,
+    "payment_rail": "ach_transfer",
+    "timestamp": "2026-05-15T19:00:00"
+  },
+  {
+    "from_account": "acc_f007002abc",
+    "to_account": "acc_f007c01abc",
+    "amount": 22000,
+    "payment_rail": "ach_transfer",
+    "timestamp": "2026-05-15T19:15:00"
+  },
+  {
+    "from_account": "acc_f007003abc",
+    "to_account": "acc_f007c01abc",
+    "amount": 16500,
+    "payment_rail": "ach_transfer",
+    "timestamp": "2026-05-15T19:30:00"
+  },
+  {
+    "from_account": "acc_f007004abc",
+    "to_account": "acc_f007c01abc",
+    "amount": 25000,
+    "payment_rail": "ach_transfer",
+    "timestamp": "2026-05-15T20:00:00"
+  },
+  {
+    "from_account": "acc_f007005abc",
+    "to_account": "acc_f007c01abc",
+    "amount": 19500,
+    "payment_rail": "ach_transfer",
+    "timestamp": "2026-05-15T20:15:00"
+  },
+  {
+    "from_account": "acc_f007006abc",
+    "to_account": "acc_f007c01abc",
+    "amount": 31000,
+    "payment_rail": "ach_transfer",
+    "timestamp": "2026-05-15T20:30:00"
+  },
+  {
+    "from_account": "acc_f007007abc",
+    "to_account": "acc_f007c01abc",
+    "amount": 14500,
+    "payment_rail": "ach_transfer",
+    "timestamp": "2026-05-15T21:00:00"
+  },
+  {
+    "from_account": "acc_f007008abc",
+    "to_account": "acc_f007c01abc",
+    "amount": 17000,
+    "payment_rail": "ach_transfer",
+    "timestamp": "2026-05-15T21:15:00"
+  }
+]

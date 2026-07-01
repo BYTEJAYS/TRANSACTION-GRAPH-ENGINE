@@ -1,0 +1,48 @@
+# TGIE data layer — Phase 2/3 persistence (locked decision: Neo4j + Postgres + Redis).
+# Requires Docker Desktop. Bring up the graph alone for Phase 2 schema work:
+#     docker compose -f deployment/docker-compose.data.yml up -d neo4j
+# Then apply the schema:
+#     (cd backend && python -m graph.schema.bootstrap)
+services:
+  neo4j:
+    image: neo4j:5-community
+    container_name: tgie-neo4j
+    ports:
+      - "7474:7474"   # browser UI
+      - "7687:7687"   # bolt
+    environment:
+      NEO4J_AUTH: neo4j/tgie-dev-password
+      NEO4J_PLUGINS: '["graph-data-science"]'   # GDS for centrality/community precompute (Phase 9)
+      NEO4J_dbms_memory_pagecache_size: 1G
+    volumes:
+      - tgie_neo4j_data:/data
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://localhost:7474 || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  postgres:
+    image: postgres:16-alpine
+    container_name: tgie-postgres
+    ports:
+      - "5433:5432"   # 5433 to avoid clashing with any local pg / .prl-local-pg
+    environment:
+      POSTGRES_USER: tgie
+      POSTGRES_PASSWORD: tgie-dev-password
+      POSTGRES_DB: tgie
+    volumes:
+      - tgie_pg_data:/var/lib/postgresql/data
+
+  redis:
+    image: redis:7-alpine
+    container_name: tgie-redis
+    ports:
+      - "6380:6379"   # 6380 to avoid clashing with any local redis-data
+    volumes:
+      - tgie_redis_data:/data
+
+volumes:
+  tgie_neo4j_data:
+  tgie_pg_data:
+  tgie_redis_data:

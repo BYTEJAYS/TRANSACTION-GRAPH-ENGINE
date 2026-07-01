@@ -1,0 +1,12 @@
+{
+  "TGIE-2026-0009": {
+    "case_id": "TGIE-2026-0009",
+    "title": "Auto case TGIE-2026-0009",
+    "description": "",
+    "owner": "system",
+    "created_at": "2026-06-27T06:04:40.952885+00:00",
+    "evidence_ids": [
+      "EV-20260627-0BE51645"
+    ]
+  }
+}

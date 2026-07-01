@@ -1,0 +1,65 @@
+name: CI
+
+on:
+  push:
+    branches: [main, production]
+  pull_request:
+    branches: [main, production]
+
+jobs:
+  backend:
+    name: Backend — Python lint & import check
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: backend
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: "pip"
+          cache-dependency-path: backend/requirements.txt
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Check imports resolve
+        run: python -c "import fastapi, networkx, sklearn, xgboost, shap, faker, reportlab; print('All imports OK')"
+
+      - name: Syntax check all modules
+        run: python -m py_compile main.py config.py fraud_classifier.py models/transaction.py api/routes.py ml/xgboost_classifier.py
+
+      - name: XGBoost classifier trains and predicts
+        run: python -m ml.xgboost_classifier
+
+  frontend:
+    name: Frontend — TypeScript build
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontend
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Node 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Type check
+        run: npx tsc --noEmit
+
+      - name: Build
+        run: npm run build
+        env:
+          VITE_API_URL: ""

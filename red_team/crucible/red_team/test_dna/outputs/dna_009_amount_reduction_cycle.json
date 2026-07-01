@@ -1,0 +1,23 @@
+[
+  {
+    "from_account": "acc_f00a001abc",
+    "to_account": "acc_f00a002abc",
+    "amount": 100000,
+    "payment_rail": "wire_transfer",
+    "timestamp": "2026-05-01T10:00:00"
+  },
+  {
+    "from_account": "acc_f00a002abc",
+    "to_account": "acc_f00a003abc",
+    "amount": 75000,
+    "payment_rail": "wire_transfer",
+    "timestamp": "2026-05-08T11:00:00"
+  },
+  {
+    "from_account": "acc_f00a003abc",
+    "to_account": "acc_f00a001abc",
+    "amount": 60000,
+    "payment_rail": "wire_transfer",
+    "timestamp": "2026-05-15T10:00:00"
+  }
+]

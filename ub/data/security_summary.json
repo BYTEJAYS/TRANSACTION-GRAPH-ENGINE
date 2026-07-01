@@ -1,0 +1,17 @@
+{
+  "generated_at": "2026-06-26T12:35:16",
+  "posture": "Advanced prototype \u2014 strong research core; production hardening required.",
+  "readiness_score": "55/100 (see docs/production_readiness_report.md)",
+  "critical": [
+    "No authN on the public WS (/ws/live) and POST /transaction/manual",
+    "Static BLUE_TEAM_API_KEY in env docs \u2014 rotate + secret manager",
+    "Blue Team V2 trusts attacker-set node attributes (B8)",
+    "V1 label leakage (B5): IsolationForest reads ground-truth fraud_pattern",
+    "56.7% benign false-positive rate on realistic legit traffic (fixed to ~0% by provenance signal)"
+  ],
+  "ub_security": [
+    "UB runs entirely locally via Ollama \u2014 no transaction data leaves the Mac",
+    "UB service is intended for localhost / trusted-network use",
+    "Knowledge index is built from the local workspace only"
+  ]
+}

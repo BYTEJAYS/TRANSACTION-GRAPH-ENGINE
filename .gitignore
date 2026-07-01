@@ -1,0 +1,54 @@
+# Dependencies / build artifacts (regenerate per component)
+node_modules/
+.venv/
+venv/
+dist/
+build/
+.next/
+.turbo/
+*.egg-info/
+
+# Python caches
+__pycache__/
+*.pyc
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# UB knowledge index + sessions (local, regenerable via `python -m ub index`)
+ub/knowledge_engine/index/
+ub/data/sessions/
+
+# Runtime data / logs
+logs/*
+!logs/.gitkeep
+_data/
+*.log
+redis-data/
+pgdata/
+
+# OS / editor
+.DS_Store
+.idea/
+*.swp
+
+# Secrets — never commit real env files (templates in configs/ are OK)
+.env
+*.env
+.env.*
+!.env.example
+!*.env.example
+
+# Backups can be large
+backups/*
+!backups/README.md
+
+# Manual control runtime PID files
+control/pids/*.pid
+
+# Runtime investigator profile store (created at registration)
+backend/auth/_data/
+backend/case_management/_data/
+backend/fraud_dna/_data/

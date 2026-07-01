@@ -1,0 +1,54 @@
+{
+  "generated_at": "2026-06-26T12:35:16",
+  "services": [
+    {
+      "name": "Frontend",
+      "port": 3000,
+      "stack": "Vite + React 18 + three.js"
+    },
+    {
+      "name": "TGIE Core Backend",
+      "port": 8000,
+      "stack": "FastAPI + Uvicorn"
+    },
+    {
+      "name": "BLING Blue Team",
+      "port": 8001,
+      "stack": "FastAPI + Postgres + Neo4j + Celery"
+    },
+    {
+      "name": "UB Service",
+      "port": 8000,
+      "note": "mounted on the core backend under /ub/*"
+    },
+    {
+      "name": "Ollama",
+      "port": 11434,
+      "stack": "local LLM runtime"
+    }
+  ],
+  "data_flow": [
+    "Ingress: POST /transaction/manual (batch) or simulator feed",
+    "Graph build: graph_engine/graph_manager.py (networkx) maintains nodes/edges/components",
+    "Scoring: Blue Team router \u2192 V1 (ML) or V2 (deterministic, 11 detectors)",
+    "Broadcast: verdicts + graph deltas over WS /ws/live (~1s)",
+    "Render: GraphScene.tsx multi-scale cluster force layout + risk-intel coloring",
+    "Narration: UB wakes on fraud and explains"
+  ],
+  "ub_pipeline": "Frontend \u2192 FastAPI (/ub) \u2192 UB AI Core \u2192 Knowledge Engine \u2192 Vector DB \u2192 Ollama \u2192 llama3.1:8b",
+  "key_invariants": [
+    "mergedData memoized on graphSig \u2014 prevents heartbeat reheat",
+    "Never call d3ReheatSimulation() before first graphData (blank-canvas crash)",
+    "Decentralized cluster forces \u2014 no global center/origin gravity",
+    "Blue Team V2 is additive/opt-in; V1 untouched",
+    "Red Team panel + UB are localhost/local-only by default"
+  ],
+  "ub_modes": [
+    "chat",
+    "founder",
+    "developer",
+    "presentation",
+    "demo",
+    "judge"
+  ]
+}

@@ -1,0 +1,64 @@
+[
+  {
+    "scenario": "circular_transfer",
+    "description": "Classic A→B→C→A money laundering loop",
+    "transactions": [
+      { "from_account": "ACC-ORIGIN",   "to_account": "MUL-001",    "amount": 250000, "payment_rail": "IMPS" },
+      { "from_account": "MUL-001",      "to_account": "MUL-002",    "amount": 248000, "payment_rail": "UPI"  },
+      { "from_account": "MUL-002",      "to_account": "MUL-003",    "amount": 246000, "payment_rail": "NEFT" },
+      { "from_account": "MUL-003",      "to_account": "ACC-ORIGIN", "amount": 244000, "payment_rail": "IMPS" }
+    ]
+  },
+  {
+    "scenario": "fan_out_smurfing",
+    "description": "Single high-value account splits funds across many mules (smurfing)",
+    "transactions": [
+      { "from_account": "HVA-MASTER",  "to_account": "MUL-A",  "amount": 49500, "payment_rail": "UPI"  },
+      { "from_account": "HVA-MASTER",  "to_account": "MUL-B",  "amount": 49000, "payment_rail": "UPI"  },
+      { "from_account": "HVA-MASTER",  "to_account": "MUL-C",  "amount": 48500, "payment_rail": "IMPS" },
+      { "from_account": "HVA-MASTER",  "to_account": "MUL-D",  "amount": 48000, "payment_rail": "UPI"  },
+      { "from_account": "HVA-MASTER",  "to_account": "MUL-E",  "amount": 47000, "payment_rail": "NEFT" }
+    ]
+  },
+  {
+    "scenario": "mule_chain",
+    "description": "Linear hop chain obscuring fund origin across 5 intermediaries",
+    "transactions": [
+      { "from_account": "SUSPECT-001", "to_account": "MUL-HOP-1", "amount": 500000, "payment_rail": "RTGS" },
+      { "from_account": "MUL-HOP-1",  "to_account": "MUL-HOP-2", "amount": 499000, "payment_rail": "IMPS" },
+      { "from_account": "MUL-HOP-2",  "to_account": "MUL-HOP-3", "amount": 497000, "payment_rail": "UPI"  },
+      { "from_account": "MUL-HOP-3",  "to_account": "MUL-HOP-4", "amount": 495000, "payment_rail": "NEFT" },
+      { "from_account": "MUL-HOP-4",  "to_account": "CLEAN-EXIT", "amount": 493000, "payment_rail": "RTGS" }
+    ]
+  },
+  {
+    "scenario": "structuring",
+    "description": "Repeated same-amount transactions just below ₹50,000 reporting threshold",
+    "transactions": [
+      { "from_account": "STRUCT-SRC",  "to_account": "STRUCT-DST", "amount": 49999, "payment_rail": "UPI"  },
+      { "from_account": "STRUCT-SRC",  "to_account": "STRUCT-DST", "amount": 49999, "payment_rail": "IMPS" },
+      { "from_account": "STRUCT-SRC",  "to_account": "STRUCT-DST", "amount": 49999, "payment_rail": "UPI"  },
+      { "from_account": "STRUCT-SRC",  "to_account": "STRUCT-DST", "amount": 49999, "payment_rail": "NEFT" }
+    ]
+  },
+  {
+    "scenario": "layering",
+    "description": "Split and recombine pattern — funds split then reconsolidate to obscure origin",
+    "transactions": [
+      { "from_account": "LAYER-SRC",   "to_account": "SPLIT-A",   "amount": 200000, "payment_rail": "RTGS" },
+      { "from_account": "LAYER-SRC",   "to_account": "SPLIT-B",   "amount": 200000, "payment_rail": "IMPS" },
+      { "from_account": "SPLIT-A",     "to_account": "MID-NODE",  "amount": 199000, "payment_rail": "UPI"  },
+      { "from_account": "SPLIT-B",     "to_account": "MID-NODE",  "amount": 199000, "payment_rail": "UPI"  },
+      { "from_account": "MID-NODE",    "to_account": "LAYER-DST", "amount": 395000, "payment_rail": "RTGS" }
+    ]
+  },
+  {
+    "scenario": "cash_structuring",
+    "description": "Cash deposits followed by immediate digital transfers",
+    "transactions": [
+      { "from_account": "CASH",        "to_account": "ACC-WASH-1", "amount": 45000, "payment_rail": "CASH" },
+      { "from_account": "ACC-WASH-1",  "to_account": "ACC-WASH-2", "amount": 44000, "payment_rail": "UPI"  },
+      { "from_account": "ACC-WASH-2",  "to_account": "ACC-CLEAN",  "amount": 43000, "payment_rail": "IMPS" }
+    ]
+  }
+]

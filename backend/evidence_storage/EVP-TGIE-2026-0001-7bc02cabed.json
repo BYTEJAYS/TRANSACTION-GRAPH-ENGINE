@@ -1,0 +1,234 @@
+{
+  "package_id": "EVP-TGIE-2026-0001-7bc02cabed",
+  "case_id": "TGIE-2026-0001",
+  "generated_at": "2026-06-30T23:52:12.830963+00:00",
+  "generated_by": "INV-TEST",
+  "sections": {
+    "1_case_summary": {
+      "case_id": "TGIE-2026-0001",
+      "title": "High-Risk Transaction Cluster",
+      "category": "High-Risk Network",
+      "status": "New",
+      "priority": "Critical",
+      "disposition": null,
+      "assigned_to": null,
+      "assigned_name": null,
+      "department": null,
+      "created_at": 1782863239.677233,
+      "updated_at": 1782863239.677233
+    },
+    "2_timeline": [
+      {
+        "id": "377ddaa5b7",
+        "ts": 1782863240.677233,
+        "event": "Case Created",
+        "actor": "TGIE Risk Engine",
+        "detail": "Risk 88/100 (Critical) \u00b7 3 accounts"
+      },
+      {
+        "id": "4ae462b48a",
+        "ts": 1782863239.677233,
+        "event": "Fraud Detected",
+        "actor": "TGIE Risk Engine",
+        "detail": "test"
+      }
+    ],
+    "3_graph_snapshot": {
+      "nodes": [
+        {
+          "id": "VICTIM",
+          "risk": 90,
+          "role": "primary"
+        },
+        {
+          "id": "MULE",
+          "risk": 80,
+          "role": "linked"
+        },
+        {
+          "id": "DIAMOND_CASHOUT",
+          "risk": 0,
+          "role": "cash_out"
+        }
+      ],
+      "edges": [
+        {
+          "from": "VICTIM",
+          "to": "MULE"
+        },
+        {
+          "from": "MULE",
+          "to": "DIAMOND_CASHOUT"
+        }
+      ],
+      "indicators": [],
+      "camera": null
+    },
+    "4_suspicious_accounts": [
+      {
+        "account": "VICTIM",
+        "role": null,
+        "risk_score": null,
+        "flagged": false
+      },
+      {
+        "account": "MULE",
+        "role": null,
+        "risk_score": null,
+        "flagged": false
+      },
+      {
+        "account": "DIAMOND_CASHOUT",
+        "role": null,
+        "risk_score": null,
+        "flagged": false
+      }
+    ],
+    "5_transactions": [
+      {
+        "txn_id": "e1",
+        "amount": 900000,
+        "date": 1782863239.677233,
+        "from_account": "VICTIM",
+        "to_account": "MULE",
+        "rail": "UPI",
+        "reason": "Transaction in flagged cluster"
+      },
+      {
+        "txn_id": "e2",
+        "amount": 900000,
+        "date": 1782863239.677233,
+        "from_account": "MULE",
+        "to_account": "DIAMOND_CASHOUT",
+        "rail": "CASH_OUT",
+        "reason": "Transaction in flagged cluster"
+      }
+    ],
+    "6_risk_score": {
+      "risk_score": 88,
+      "assessment": {
+        "score": 88,
+        "level": "Critical",
+        "explanation": "test"
+      }
+    },
+    "7_fraud_pattern": {
+      "category": "High-Risk Network",
+      "detection_key": "det:DIAMOND_CASHOUT|MULE|VICTIM",
+      "fraud_dna": {
+        "dna_id": "FDNA-NET-086",
+        "type": "NET",
+        "signature": "0x0C4DB0",
+        "genes": [
+          {
+            "name": "Velocity",
+            "score": 26,
+            "label": "Low"
+          },
+          {
+            "name": "Amount",
+            "score": 84,
+            "label": "Rounded"
+          },
+          {
+            "name": "Structure",
+            "score": 64,
+            "label": "Dense cluster"
+          },
+          {
+            "name": "Behavior",
+            "score": 42,
+            "label": "Established"
+          },
+          {
+            "name": "Temporal",
+            "score": 28,
+            "label": "Business hours"
+          },
+          {
+            "name": "Flow",
+            "score": 30,
+            "label": "Mixed flow"
+          },
+          {
+            "name": "Risk",
+            "score": 86,
+            "label": "Critical"
+          },
+          {
+            "name": "Outcome",
+            "score": 50,
+            "label": "Under investigation"
+          }
+        ],
+        "behavior_summary": "Established",
+        "money_movement_style": "Multi-hop layering chain",
+        "layering_depth": 3,
+        "fan_out": 1,
+        "fan_in": 1,
+        "circular_transfers": false,
+        "dormant_accounts": 0,
+        "velocity": "Low",
+        "velocity_score": 26,
+        "network_complexity": "High",
+        "explanation": "This case carries a NET fraud-DNA signature. Its strongest behavioural genes are risk (86), amount (84), structure (64). The structure gene reads 'Dense cluster' and the money-flow gene reads 'Mixed flow', which is characteristic of this fraud methodology.",
+        "suggested_action": "Escalate to Law Enforcement",
+        "known_similar_cases": []
+      }
+    },
+    "8_reason": "test",
+    "9_confidence": 0.9,
+    "10_supporting_rules": {
+      "primary_suspects": [
+        "VICTIM"
+      ],
+      "victims": [],
+      "intermediaries": [
+        "MULE"
+      ],
+      "destinations": [
+        "DIAMOND_CASHOUT"
+      ]
+    },
+    "11_ml_explanation": {
+      "note": "ML ensemble explanation attaches when the model is scored for this case (Phase 5 wiring)."
+    },
+    "12_graph_metrics": {
+      "accounts": 3,
+      "edges": 2,
+      "fan_out": 1,
+      "fan_in": 1,
+      "layering_depth": 3,
+      "circular_transfers": false,
+      "density": 0.667,
+      "network_complexity": "High"
+    },
+    "13_path_analysis": {
+      "longest_fund_path": [],
+      "hops": 0,
+      "edge_count": 2
+    },
+    "14_investigator_notes": {
+      "notes": [],
+      "comments": []
+    },
+    "15_regulatory_summary": {
+      "suspicion_grounds": "test",
+      "risk_score": 88,
+      "confidence": 0.9,
+      "accounts_involved": 3,
+      "flagged_accounts": [],
+      "transaction_count": 2,
+      "total_amount": 1800000.0,
+      "recommended_action": "File STR with FIU-IND"
+    }
+  },
+  "integrity": {
+    "sha256": "7bc02cabeded2872af7a725520dda8392daef352978e8347ea2eae430d865c9f",
+    "algorithm": "SHA-256",
+    "anchor": {
+      "status": "unanchored",
+      "reason": "BELS unreachable (:8200 down)"
+    }
+  }
+}

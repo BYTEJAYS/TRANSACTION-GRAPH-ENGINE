@@ -1,0 +1,752 @@
+{
+  "package_id": "EVP-TGIE-2026-0001-418aff52b0",
+  "case_id": "TGIE-2026-0001",
+  "generated_at": "2026-06-30T23:15:36.368976+00:00",
+  "generated_by": "INV-TEST",
+  "sections": {
+    "1_case_summary": {
+      "case_id": "TGIE-2026-0001",
+      "title": "High-Risk Transaction Cluster",
+      "category": "High-Risk Network",
+      "status": "Under Review",
+      "priority": "Critical",
+      "disposition": null,
+      "assigned_to": "INV-2009",
+      "assigned_name": "ARAV",
+      "department": null,
+      "created_at": 1782556524.435642,
+      "updated_at": 1782558534.526866
+    },
+    "2_timeline": [
+      {
+        "id": "66126d5078",
+        "ts": 1782558534.5268638,
+        "event": "Case Assigned",
+        "actor": "ARAV",
+        "detail": "Assigned to ARAV"
+      },
+      {
+        "id": "5302ebfc5b",
+        "ts": 1782556525.435642,
+        "event": "Case Created",
+        "actor": "TGIE Risk Engine",
+        "detail": "Risk 100/100 (Critical) \u00b7 15 accounts"
+      },
+      {
+        "id": "34367a62e8",
+        "ts": 1782556524.435642,
+        "event": "Fraud Detected",
+        "actor": "TGIE Risk Engine",
+        "detail": "Risk Score 100 (Critical). Contributing factors: Transaction amount (+25) \u00b7 Circular money flow (+25) \u00b7 Layering depth (+22) \u00b7 Cash movement (+18) \u00b7 Multiple payment rails (+15) \u00b7 Network complexity (+8)."
+      }
+    ],
+    "3_graph_snapshot": {
+      "nodes": [
+        {
+          "id": "ACC_B2",
+          "risk": 0,
+          "role": "primary"
+        },
+        {
+          "id": "ACC_RING3",
+          "risk": 0,
+          "role": "linked"
+        },
+        {
+          "id": "ACC_B1",
+          "risk": 0,
+          "role": "linked"
+        },
+        {
+          "id": "ACC_HUB",
+          "risk": 0,
+          "role": "linked"
+        },
+        {
+          "id": "ACC_RING1",
+          "risk": 0,
+          "role": "linked"
+        },
+        {
+          "id": "ACC_A1",
+          "risk": 0,
+          "role": "linked"
+        },
+        {
+          "id": "CASH_SOURCE",
+          "risk": 0,
+          "role": "linked"
+        },
+        {
+          "id": "ACC_RING2",
+          "risk": 0,
+          "role": "linked"
+        },
+        {
+          "id": "ACC_ROOT",
+          "risk": 0,
+          "role": "linked"
+        },
+        {
+          "id": "ACC_A2",
+          "risk": 0,
+          "role": "linked"
+        },
+        {
+          "id": "CASH_EXIT",
+          "risk": 0,
+          "role": "linked"
+        },
+        {
+          "id": "ACC_B3",
+          "risk": 0,
+          "role": "linked"
+        },
+        {
+          "id": "ACC_B4",
+          "risk": 0,
+          "role": "linked"
+        },
+        {
+          "id": "ACC_A3",
+          "risk": 0,
+          "role": "linked"
+        },
+        {
+          "id": "ACC_FINAL",
+          "risk": 0,
+          "role": "linked"
+        }
+      ],
+      "edges": [
+        {
+          "from": "CASH_SOURCE",
+          "to": "ACC_ROOT"
+        },
+        {
+          "from": "ACC_ROOT",
+          "to": "ACC_A1"
+        },
+        {
+          "from": "ACC_ROOT",
+          "to": "ACC_A2"
+        },
+        {
+          "from": "ACC_ROOT",
+          "to": "ACC_A3"
+        },
+        {
+          "from": "ACC_A1",
+          "to": "ACC_B1"
+        },
+        {
+          "from": "ACC_A1",
+          "to": "ACC_B2"
+        },
+        {
+          "from": "ACC_A2",
+          "to": "ACC_B2"
+        },
+        {
+          "from": "ACC_A2",
+          "to": "ACC_B3"
+        },
+        {
+          "from": "ACC_A3",
+          "to": "ACC_B3"
+        },
+        {
+          "from": "ACC_A3",
+          "to": "ACC_B4"
+        },
+        {
+          "from": "ACC_B1",
+          "to": "ACC_HUB"
+        },
+        {
+          "from": "ACC_B2",
+          "to": "ACC_HUB"
+        },
+        {
+          "from": "ACC_B3",
+          "to": "ACC_HUB"
+        },
+        {
+          "from": "ACC_B4",
+          "to": "ACC_HUB"
+        },
+        {
+          "from": "ACC_HUB",
+          "to": "ACC_RING1"
+        },
+        {
+          "from": "ACC_HUB",
+          "to": "ACC_FINAL"
+        },
+        {
+          "from": "ACC_RING1",
+          "to": "ACC_RING2"
+        },
+        {
+          "from": "ACC_RING2",
+          "to": "ACC_RING3"
+        },
+        {
+          "from": "ACC_RING3",
+          "to": "ACC_RING1"
+        },
+        {
+          "from": "ACC_FINAL",
+          "to": "CASH_EXIT"
+        }
+      ],
+      "indicators": [],
+      "camera": null
+    },
+    "4_suspicious_accounts": [
+      {
+        "account": "ACC_B2",
+        "role": null,
+        "risk_score": null,
+        "flagged": false
+      },
+      {
+        "account": "ACC_RING3",
+        "role": null,
+        "risk_score": null,
+        "flagged": false
+      },
+      {
+        "account": "ACC_B1",
+        "role": null,
+        "risk_score": null,
+        "flagged": false
+      },
+      {
+        "account": "ACC_HUB",
+        "role": null,
+        "risk_score": null,
+        "flagged": false
+      },
+      {
+        "account": "ACC_RING1",
+        "role": null,
+        "risk_score": null,
+        "flagged": false
+      },
+      {
+        "account": "ACC_A1",
+        "role": null,
+        "risk_score": null,
+        "flagged": false
+      },
+      {
+        "account": "CASH_SOURCE",
+        "role": null,
+        "risk_score": null,
+        "flagged": false
+      },
+      {
+        "account": "ACC_RING2",
+        "role": null,
+        "risk_score": null,
+        "flagged": false
+      },
+      {
+        "account": "ACC_ROOT",
+        "role": null,
+        "risk_score": null,
+        "flagged": false
+      },
+      {
+        "account": "ACC_A2",
+        "role": null,
+        "risk_score": null,
+        "flagged": false
+      },
+      {
+        "account": "CASH_EXIT",
+        "role": null,
+        "risk_score": null,
+        "flagged": false
+      },
+      {
+        "account": "ACC_B3",
+        "role": null,
+        "risk_score": null,
+        "flagged": false
+      },
+      {
+        "account": "ACC_B4",
+        "role": null,
+        "risk_score": null,
+        "flagged": false
+      },
+      {
+        "account": "ACC_A3",
+        "role": null,
+        "risk_score": null,
+        "flagged": false
+      },
+      {
+        "account": "ACC_FINAL",
+        "role": null,
+        "risk_score": null,
+        "flagged": false
+      }
+    ],
+    "5_transactions": [
+      {
+        "txn_id": "TXN-78F48C52B169",
+        "amount": 1200000.0,
+        "date": 1782556524.435642,
+        "from_account": "CASH_SOURCE",
+        "to_account": "ACC_ROOT",
+        "rail": "CASH_IN",
+        "reason": "Transaction in flagged cluster"
+      },
+      {
+        "txn_id": "TXN-551A97F8EEC8",
+        "amount": 390000.0,
+        "date": 1782556524.435642,
+        "from_account": "ACC_ROOT",
+        "to_account": "ACC_A1",
+        "rail": "UPI",
+        "reason": "Transaction in flagged cluster"
+      },
+      {
+        "txn_id": "TXN-5C624C8D3866",
+        "amount": 395000.0,
+        "date": 1782556524.435642,
+        "from_account": "ACC_ROOT",
+        "to_account": "ACC_A2",
+        "rail": "IMPS",
+        "reason": "Transaction in flagged cluster"
+      },
+      {
+        "txn_id": "TXN-E64B0717C06A",
+        "amount": 400000.0,
+        "date": 1782556524.435642,
+        "from_account": "ACC_ROOT",
+        "to_account": "ACC_A3",
+        "rail": "NEFT",
+        "reason": "Transaction in flagged cluster"
+      },
+      {
+        "txn_id": "TXN-BA8994F5553F",
+        "amount": 190000.0,
+        "date": 1782556524.435642,
+        "from_account": "ACC_A1",
+        "to_account": "ACC_B1",
+        "rail": "UPI",
+        "reason": "Transaction in flagged cluster"
+      },
+      {
+        "txn_id": "TXN-04054C831019",
+        "amount": 195000.0,
+        "date": 1782556524.435642,
+        "from_account": "ACC_A1",
+        "to_account": "ACC_B2",
+        "rail": "RTGS",
+        "reason": "Transaction in flagged cluster"
+      },
+      {
+        "txn_id": "TXN-9577EE89D35B",
+        "amount": 195000.0,
+        "date": 1782556524.435642,
+        "from_account": "ACC_A2",
+        "to_account": "ACC_B2",
+        "rail": "UPI",
+        "reason": "Transaction in flagged cluster"
+      },
+      {
+        "txn_id": "TXN-A47F5B822E10",
+        "amount": 195000.0,
+        "date": 1782556524.435642,
+        "from_account": "ACC_A2",
+        "to_account": "ACC_B3",
+        "rail": "IMPS",
+        "reason": "Transaction in flagged cluster"
+      },
+      {
+        "txn_id": "TXN-3ABCA993939C",
+        "amount": 198000.0,
+        "date": 1782556524.435642,
+        "from_account": "ACC_A3",
+        "to_account": "ACC_B3",
+        "rail": "NEFT",
+        "reason": "Transaction in flagged cluster"
+      },
+      {
+        "txn_id": "TXN-9737216E8395",
+        "amount": 198000.0,
+        "date": 1782556524.435642,
+        "from_account": "ACC_A3",
+        "to_account": "ACC_B4",
+        "rail": "UPI",
+        "reason": "Transaction in flagged cluster"
+      },
+      {
+        "txn_id": "TXN-2A6A058F3547",
+        "amount": 185000.0,
+        "date": 1782556524.435642,
+        "from_account": "ACC_B1",
+        "to_account": "ACC_HUB",
+        "rail": "UPI",
+        "reason": "Transaction in flagged cluster"
+      },
+      {
+        "txn_id": "TXN-1E51E0C207C5",
+        "amount": 385000.0,
+        "date": 1782556524.435642,
+        "from_account": "ACC_B2",
+        "to_account": "ACC_HUB",
+        "rail": "IMPS",
+        "reason": "Transaction in flagged cluster"
+      },
+      {
+        "txn_id": "TXN-3BDEF2B95767",
+        "amount": 388000.0,
+        "date": 1782556524.435642,
+        "from_account": "ACC_B3",
+        "to_account": "ACC_HUB",
+        "rail": "NEFT",
+        "reason": "Transaction in flagged cluster"
+      },
+      {
+        "txn_id": "TXN-E6B9348A0BAD",
+        "amount": 193000.0,
+        "date": 1782556524.435642,
+        "from_account": "ACC_B4",
+        "to_account": "ACC_HUB",
+        "rail": "UPI",
+        "reason": "Transaction in flagged cluster"
+      },
+      {
+        "txn_id": "TXN-1EC062A6AFE4",
+        "amount": 570000.0,
+        "date": 1782556524.435642,
+        "from_account": "ACC_HUB",
+        "to_account": "ACC_RING1",
+        "rail": "UPI",
+        "reason": "Transaction in flagged cluster"
+      },
+      {
+        "txn_id": "TXN-E8AC276A76C9",
+        "amount": 570000.0,
+        "date": 1782556524.435642,
+        "from_account": "ACC_HUB",
+        "to_account": "ACC_FINAL",
+        "rail": "RTGS",
+        "reason": "Transaction in flagged cluster"
+      },
+      {
+        "txn_id": "TXN-A78CDF744AED",
+        "amount": 565000.0,
+        "date": 1782556524.435642,
+        "from_account": "ACC_RING1",
+        "to_account": "ACC_RING2",
+        "rail": "IMPS",
+        "reason": "Transaction in flagged cluster"
+      },
+      {
+        "txn_id": "TXN-7BB7750EF376",
+        "amount": 560000.0,
+        "date": 1782556524.435642,
+        "from_account": "ACC_RING2",
+        "to_account": "ACC_RING3",
+        "rail": "NEFT",
+        "reason": "Transaction in flagged cluster"
+      },
+      {
+        "txn_id": "TXN-B943F7E88578",
+        "amount": 555000.0,
+        "date": 1782556524.435642,
+        "from_account": "ACC_RING3",
+        "to_account": "ACC_RING1",
+        "rail": "UPI",
+        "reason": "Transaction in flagged cluster"
+      },
+      {
+        "txn_id": "TXN-A03B61226956",
+        "amount": 565000.0,
+        "date": 1782556524.435642,
+        "from_account": "ACC_FINAL",
+        "to_account": "CASH_EXIT",
+        "rail": "CASH_OUT",
+        "reason": "Transaction in flagged cluster"
+      }
+    ],
+    "6_risk_score": {
+      "risk_score": 100,
+      "assessment": {
+        "score": 100,
+        "level": "Critical",
+        "action": "Immediate investigation case \u00b7 recommend account freeze & transaction hold",
+        "priority": "Critical",
+        "confidence": 99,
+        "factors": [
+          {
+            "key": "amount",
+            "label": "Transaction amount",
+            "points": 25,
+            "max": 25,
+            "detail": "Largest transaction \u20b91,200,000"
+          },
+          {
+            "key": "circular",
+            "label": "Circular money flow",
+            "points": 25,
+            "max": 25,
+            "detail": "Circular money flow (closed loop) detected"
+          },
+          {
+            "key": "layering",
+            "label": "Layering depth",
+            "points": 22,
+            "max": 22,
+            "detail": "Forwarding chain depth 9"
+          },
+          {
+            "key": "cash",
+            "label": "Cash movement",
+            "points": 18,
+            "max": 18,
+            "detail": "Cash movement combined with suspicious structure"
+          },
+          {
+            "key": "payment_rails",
+            "label": "Multiple payment rails",
+            "points": 15,
+            "max": 15,
+            "detail": "6 payment rails used (CASH_IN, CASH_OUT, IMPS, NEFT, RTGS)"
+          },
+          {
+            "key": "complexity",
+            "label": "Network complexity",
+            "points": 8,
+            "max": 12,
+            "detail": "15 accounts \u00b7 20 edges \u00b7 density 0.10"
+          },
+          {
+            "key": "fan_in",
+            "label": "Fan-in",
+            "points": 7,
+            "max": 20,
+            "detail": "Fan-in from 4 sender account(s)"
+          },
+          {
+            "key": "velocity",
+            "label": "Transaction velocity",
+            "points": 4,
+            "max": 25,
+            "detail": "3 transfer(s) within 120s"
+          },
+          {
+            "key": "fan_out",
+            "label": "Fan-out",
+            "points": 4,
+            "max": 20,
+            "detail": "Fan-out to 3 recipient account(s)"
+          }
+        ],
+        "top_indicators": [
+          "Transaction amount",
+          "Circular money flow",
+          "Layering depth",
+          "Cash movement",
+          "Multiple payment rails"
+        ],
+        "suppressed": false,
+        "suppression_reason": null,
+        "explanation": "Risk Score 100 (Critical). Contributing factors: Transaction amount (+25) \u00b7 Circular money flow (+25) \u00b7 Layering depth (+22) \u00b7 Cash movement (+18) \u00b7 Multiple payment rails (+15) \u00b7 Network complexity (+8).",
+        "should_create_case": true,
+        "investigation_threshold": 70,
+        "metrics": {
+          "accounts": 15,
+          "edges": 20,
+          "max_amount": 1200000.0,
+          "max_fan_out": 3,
+          "max_fan_in": 4,
+          "layering_depth": 9,
+          "circular": true,
+          "distinct_rails": 6,
+          "cash": true,
+          "density": 0.095
+        },
+        "scored_at": "2026-06-27T10:35:24.435284+00:00"
+      }
+    },
+    "7_fraud_pattern": {
+      "category": "High-Risk Network",
+      "detection_key": "det:ACC_A1|ACC_A2|ACC_A3|ACC_B1|ACC_B2|ACC_B3|ACC_B4|ACC_FINAL|ACC_HUB|ACC_RING1|ACC_RING2|ACC_RING3|ACC_ROOT|CASH_EXIT|CASH_SOURCE",
+      "fraud_dna": {
+        "dna_id": "FDNA-NET-086",
+        "type": "NET",
+        "signature": "0xD80B84",
+        "genes": [
+          {
+            "name": "Velocity",
+            "score": 26,
+            "label": "Low"
+          },
+          {
+            "name": "Amount",
+            "score": 70,
+            "label": "Rounded"
+          },
+          {
+            "name": "Structure",
+            "score": 95,
+            "label": "Dense cluster"
+          },
+          {
+            "name": "Behavior",
+            "score": 42,
+            "label": "Established"
+          },
+          {
+            "name": "Temporal",
+            "score": 28,
+            "label": "Business hours"
+          },
+          {
+            "name": "Flow",
+            "score": 41,
+            "label": "Mixed flow"
+          },
+          {
+            "name": "Risk",
+            "score": 97,
+            "label": "Critical"
+          },
+          {
+            "name": "Outcome",
+            "score": 50,
+            "label": "Under investigation"
+          }
+        ],
+        "behavior_summary": "Established",
+        "money_movement_style": "Circular / closed-loop laundering",
+        "layering_depth": 9,
+        "fan_out": 3,
+        "fan_in": 4,
+        "circular_transfers": true,
+        "dormant_accounts": 0,
+        "velocity": "Low",
+        "velocity_score": 26,
+        "network_complexity": "High",
+        "explanation": "This case carries a NET fraud-DNA signature. Its strongest behavioural genes are risk (97), structure (95), amount (70). The structure gene reads 'Dense cluster' and the money-flow gene reads 'Mixed flow', which is characteristic of this fraud methodology.",
+        "suggested_action": "Freeze Accounts Immediately",
+        "known_similar_cases": []
+      }
+    },
+    "8_reason": "Risk Score 100 (Critical). Contributing factors: Transaction amount (+25) \u00b7 Circular money flow (+25) \u00b7 Layering depth (+22) \u00b7 Cash movement (+18) \u00b7 Multiple payment rails (+15) \u00b7 Network complexity (+8).",
+    "9_confidence": 0.99,
+    "10_supporting_rules": [
+      {
+        "key": "amount",
+        "label": "Transaction amount",
+        "points": 25,
+        "max": 25,
+        "detail": "Largest transaction \u20b91,200,000"
+      },
+      {
+        "key": "circular",
+        "label": "Circular money flow",
+        "points": 25,
+        "max": 25,
+        "detail": "Circular money flow (closed loop) detected"
+      },
+      {
+        "key": "layering",
+        "label": "Layering depth",
+        "points": 22,
+        "max": 22,
+        "detail": "Forwarding chain depth 9"
+      },
+      {
+        "key": "cash",
+        "label": "Cash movement",
+        "points": 18,
+        "max": 18,
+        "detail": "Cash movement combined with suspicious structure"
+      },
+      {
+        "key": "payment_rails",
+        "label": "Multiple payment rails",
+        "points": 15,
+        "max": 15,
+        "detail": "6 payment rails used (CASH_IN, CASH_OUT, IMPS, NEFT, RTGS)"
+      },
+      {
+        "key": "complexity",
+        "label": "Network complexity",
+        "points": 8,
+        "max": 12,
+        "detail": "15 accounts \u00b7 20 edges \u00b7 density 0.10"
+      },
+      {
+        "key": "fan_in",
+        "label": "Fan-in",
+        "points": 7,
+        "max": 20,
+        "detail": "Fan-in from 4 sender account(s)"
+      },
+      {
+        "key": "velocity",
+        "label": "Transaction velocity",
+        "points": 4,
+        "max": 25,
+        "detail": "3 transfer(s) within 120s"
+      },
+      {
+        "key": "fan_out",
+        "label": "Fan-out",
+        "points": 4,
+        "max": 20,
+        "detail": "Fan-out to 3 recipient account(s)"
+      }
+    ],
+    "11_ml_explanation": {
+      "note": "ML ensemble explanation attaches when the model is scored for this case (Phase 5 wiring)."
+    },
+    "12_graph_metrics": {
+      "accounts": 15,
+      "edges": 20,
+      "fan_out": 3,
+      "fan_in": 4,
+      "layering_depth": 9,
+      "circular_transfers": true,
+      "density": 0.19,
+      "network_complexity": "High"
+    },
+    "13_path_analysis": {
+      "longest_fund_path": [],
+      "hops": 0,
+      "edge_count": 20
+    },
+    "14_investigator_notes": {
+      "notes": [],
+      "comments": []
+    },
+    "15_regulatory_summary": {
+      "suspicion_grounds": "Risk Score 100 (Critical). Contributing factors: Transaction amount (+25) \u00b7 Circular money flow (+25) \u00b7 Layering depth (+22) \u00b7 Cash movement (+18) \u00b7 Multiple payment rails (+15) \u00b7 Network complexity (+8).",
+      "risk_score": 100,
+      "confidence": 0.99,
+      "accounts_involved": 15,
+      "flagged_accounts": [],
+      "transaction_count": 20,
+      "total_amount": 8092000.0,
+      "recommended_action": "File STR with FIU-IND"
+    }
+  },
+  "integrity": {
+    "sha256": "418aff52b031256b42a12636a23f1171bd103f3e7c915a13cb9a63e411f6c11c",
+    "algorithm": "SHA-256",
+    "anchor": {
+      "status": "unanchored",
+      "reason": "BELS unreachable (:8200 down)"
+    }
+  }
+}

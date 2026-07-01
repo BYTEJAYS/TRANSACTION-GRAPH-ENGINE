@@ -1,0 +1,224 @@
+{
+  "case_id": "CASE-FED102CC",
+  "fraud_metadata": {
+    "graph_id": "GRAPH_001",
+    "fraud_score": 0.97,
+    "fraud_type": "Layering / Circular Transfer",
+    "detection_timestamp": "2026-05-19T07:06:07.946122Z",
+    "confidence_level": "HIGH",
+    "verdict": "FRAUD",
+    "transactions_analyzed": 8
+  },
+  "fraud_details": {
+    "fraud_type": "Layering / Circular Transfer",
+    "amounts": {
+      "total_suspicious_amount": 595700.0,
+      "largest_transfer": 150000.0,
+      "average_transfer": 74462.5,
+      "total_transaction_count": 8
+    },
+    "accounts_involved": [
+      "ACC_1001",
+      "ACC_1002",
+      "ACC_1003",
+      "ACC_1004",
+      "ACC_2001",
+      "ACC_3001",
+      "ACC_4001",
+      "ACC_5001"
+    ],
+    "fraud_path": [
+      "ACC_1004",
+      "ACC_1001",
+      "ACC_1002",
+      "ACC_1003",
+      "ACC_1004"
+    ],
+    "cash_flow": {
+      "has_cash_involvement": false,
+      "cash_inflows": [],
+      "cash_outflows": []
+    },
+    "risk_explanation": {
+      "why_flagged": "circular_path_detected",
+      "anomaly_indicators": [
+        "Circular transfer path detected (1 cycle(s))",
+        "Fan-out detected from ACC_1001 (\u22653 unique targets)"
+      ],
+      "suspicious_topology": "Directed graph contains cycles across 8 nodes \u2014 funds circulate without exiting the network",
+      "propagation_behavior": "Funds propagate through 8 accounts in 8 transactions over window 2026-05-15 \u2192 2026-05-19. Average transfer: \u20b974,462 | Peak: \u20b9150,000.",
+      "flagged_accounts": [
+        "ACC_1004",
+        "ACC_1001",
+        "ACC_1003",
+        "ACC_1002"
+      ]
+    }
+  },
+  "raw_graph": {
+    "nodes": [
+      {
+        "id": "ACC_1004",
+        "account_type": "normal",
+        "risk_score": 0.0,
+        "is_flagged": false,
+        "total_sent": 120000.0,
+        "total_received": 130000.0,
+        "transaction_count": 2,
+        "detected_patterns": []
+      },
+      {
+        "id": "ACC_5001",
+        "account_type": "normal",
+        "risk_score": 0.0,
+        "is_flagged": false,
+        "total_sent": 0.0,
+        "total_received": 14400.0,
+        "transaction_count": 2,
+        "detected_patterns": []
+      },
+      {
+        "id": "ACC_1001",
+        "account_type": "normal",
+        "risk_score": 0.0,
+        "is_flagged": false,
+        "total_sent": 230000.0,
+        "total_received": 120000.0,
+        "transaction_count": 6,
+        "detected_patterns": []
+      },
+      {
+        "id": "ACC_4001",
+        "account_type": "normal",
+        "risk_score": 0.0,
+        "is_flagged": false,
+        "total_sent": 0.0,
+        "total_received": 50000.0,
+        "transaction_count": 2,
+        "detected_patterns": []
+      },
+      {
+        "id": "ACC_2001",
+        "account_type": "normal",
+        "risk_score": 0.0,
+        "is_flagged": false,
+        "total_sent": 17000.0,
+        "total_received": 30000.0,
+        "transaction_count": 4,
+        "detected_patterns": []
+      },
+      {
+        "id": "ACC_1002",
+        "account_type": "normal",
+        "risk_score": 0.0,
+        "is_flagged": false,
+        "total_sent": 140000.0,
+        "total_received": 150000.0,
+        "transaction_count": 2,
+        "detected_patterns": []
+      },
+      {
+        "id": "ACC_1003",
+        "account_type": "normal",
+        "risk_score": 0.0,
+        "is_flagged": false,
+        "total_sent": 130000.0,
+        "total_received": 140000.0,
+        "transaction_count": 2,
+        "detected_patterns": []
+      },
+      {
+        "id": "ACC_3001",
+        "account_type": "normal",
+        "risk_score": 0.0,
+        "is_flagged": false,
+        "total_sent": 14400.0,
+        "total_received": 17000.0,
+        "transaction_count": 4,
+        "detected_patterns": []
+      }
+    ],
+    "edges": [
+      {
+        "id": "TXN-6C769B1FCD4A",
+        "source": "ACC_1001",
+        "target": "ACC_1002",
+        "amount": 150000.0,
+        "payment_rail": "UPI",
+        "risk_score": 0.0,
+        "timestamp": "2026-05-19T06:43:40.327537",
+        "fraud_pattern": "normal"
+      },
+      {
+        "id": "TXN-DFF727DC1DE8",
+        "source": "ACC_1001",
+        "target": "ACC_2001",
+        "amount": 15000.0,
+        "payment_rail": "UPI",
+        "risk_score": 0.0,
+        "timestamp": "2026-05-15T10:00:00",
+        "fraud_pattern": "normal"
+      },
+      {
+        "id": "TXN-9A94D127EC9D",
+        "source": "ACC_1001",
+        "target": "ACC_4001",
+        "amount": 25000.0,
+        "payment_rail": "RTGS",
+        "risk_score": 0.0,
+        "timestamp": "2026-05-15T10:30:00",
+        "fraud_pattern": "normal"
+      },
+      {
+        "id": "TXN-18FE5FD00ED6",
+        "source": "ACC_1002",
+        "target": "ACC_1003",
+        "amount": 140000.0,
+        "payment_rail": "UPI",
+        "risk_score": 0.0,
+        "timestamp": "2026-05-19T06:43:41.828298",
+        "fraud_pattern": "normal"
+      },
+      {
+        "id": "TXN-F2CB91319A2B",
+        "source": "ACC_1003",
+        "target": "ACC_1004",
+        "amount": 130000.0,
+        "payment_rail": "UPI",
+        "risk_score": 0.0,
+        "timestamp": "2026-05-19T06:43:43.329695",
+        "fraud_pattern": "normal"
+      },
+      {
+        "id": "TXN-32A88C8626C9",
+        "source": "ACC_1004",
+        "target": "ACC_1001",
+        "amount": 120000.0,
+        "payment_rail": "UPI",
+        "risk_score": 0.0,
+        "timestamp": "2026-05-19T06:43:44.832097",
+        "fraud_pattern": "normal"
+      },
+      {
+        "id": "TXN-EF92542FDF89",
+        "source": "ACC_2001",
+        "target": "ACC_3001",
+        "amount": 8500.0,
+        "payment_rail": "IMPS",
+        "risk_score": 0.0,
+        "timestamp": "2026-05-15T10:15:00",
+        "fraud_pattern": "normal"
+      },
+      {
+        "id": "TXN-8B11AC63AC86",
+        "source": "ACC_3001",
+        "target": "ACC_5001",
+        "amount": 7200.0,
+        "payment_rail": "NEFT",
+        "risk_score": 0.0,
+        "timestamp": "2026-05-15T10:45:00",
+        "fraud_pattern": "normal"
+      }
+    ]
+  }
+}

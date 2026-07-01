@@ -1,0 +1,58 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html, body, #root {
+  margin: 0; padding: 0;
+  width: 100%; height: 100%;
+  overflow: hidden;
+  background: #0a0b0d;
+  font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  color: #e6edf3;
+}
+
+:root {
+  --bg-base:       #0d1117;
+  --bg-surface:    #161b22;
+  --bg-raised:     #1c2128;
+  --bg-overlay:    rgba(13,17,23,0.94);
+  --border:        rgba(255,255,255,0.08);
+  --border-subtle: rgba(255,255,255,0.05);
+  --text-1:        #e6edf3;
+  --text-2:        #8b949e;
+  --text-3:        #484f58;
+  --accent:        #4493f8;
+  --accent-muted:  rgba(68,147,248,0.10);
+  --warn:          #d29922;
+  --warn-muted:    rgba(210,153,34,0.10);
+  --danger:        #f85149;
+  --danger-muted:  rgba(248,81,73,0.08);
+  --success:       #3fb950;
+  --success-muted: rgba(63,185,80,0.08);
+  --header-h:      44px;
+  --sidebar-w:     256px;
+  --right-w:       288px;
+}
+
+/* ── Scrollbars ─────────────────────────────────────────────────────────── */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255,255,255,0.07) transparent;
+}
+*::-webkit-scrollbar        { width: 3px; height: 3px; }
+*::-webkit-scrollbar-track  { background: transparent; }
+*::-webkit-scrollbar-thumb  { background: rgba(255,255,255,0.07); border-radius: 2px; }
+*::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.13); }
+
+/* ── Cytoscape ──────────────────────────────────────────────────────────── */
+.cy-container canvas { background: transparent !important; }
+
+/* ── Utilities ──────────────────────────────────────────────────────────── */
+.tabular    { font-variant-numeric: tabular-nums; }
+.mono       { font-family: ui-monospace, 'SF Mono', Menlo, Consolas, monospace; }

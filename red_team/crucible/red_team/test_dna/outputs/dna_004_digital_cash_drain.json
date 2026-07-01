@@ -1,0 +1,23 @@
+[
+  {
+    "from_account": "acc_f004001abc",
+    "to_account": "acc_f004c01abc",
+    "amount": 22000,
+    "payment_rail": "internal_transfer",
+    "timestamp": "2026-05-01T10:00:00"
+  },
+  {
+    "from_account": "acc_f004002abc",
+    "to_account": "acc_f004c01abc",
+    "amount": 19000,
+    "payment_rail": "internal_transfer",
+    "timestamp": "2026-05-02T11:30:00"
+  },
+  {
+    "from_account": "acc_f004003abc",
+    "to_account": "acc_f004c01abc",
+    "amount": 21000,
+    "payment_rail": "internal_transfer",
+    "timestamp": "2026-05-04T09:15:00"
+  }
+]

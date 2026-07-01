@@ -1,0 +1,10 @@
+# TGIE Red Team — standalone dependencies.
+# Pinned to match the wider TGIE backend environment (Python 3.11).
+# NOTE: this package imports nothing from the Blue Team / backend; these are
+# its own direct dependencies.
+
+pydantic==2.7.1
+numpy==1.26.4
+pandas==2.2.2
+networkx==3.3
+faker==24.11.0

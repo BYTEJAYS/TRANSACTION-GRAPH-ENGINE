@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>BELS — Blockchain Evidence Ledger</title>
+<style>
+  :root{
+    --bg:#0a0a0b; --panel:#121214; --panel2:#171719; --line:#242428;
+    --txt:#e9e9ec; --txt2:#9a9aa2; --txt3:#5f5f68;
+    --accent:#c9a227; --accent2:#e3c04a; --ok:#3fb27f; --bad:#e0533d; --warn:#d9952b;
+    --blue:#5b8def;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);color:var(--txt);font-family:'Inter',-apple-system,Segoe UI,Roboto,sans-serif;
+       font-size:13px;line-height:1.5;-webkit-font-smoothing:antialiased}
+  code,.mono{font-family:'JetBrains Mono',ui-monospace,Menlo,monospace}
+  a{color:var(--accent2);text-decoration:none}
+  header{display:flex;align-items:center;gap:14px;padding:16px 22px;border-bottom:1px solid var(--line);
+         background:linear-gradient(180deg,#141416,#0c0c0d);position:sticky;top:0;z-index:10}
+  .brand{display:flex;flex-direction:column}
+  .brand b{font-size:15px;letter-spacing:.04em}
+  .brand span{font-size:10px;color:var(--txt3);letter-spacing:.18em;text-transform:uppercase}
+  .chip{margin-left:auto;display:flex;gap:8px;align-items:center;font-size:11px}
+  .dot{width:8px;height:8px;border-radius:50%;background:var(--ok);box-shadow:0 0 8px var(--ok)}
+  .wrap{max-width:1280px;margin:0 auto;padding:22px;display:grid;grid-template-columns:2fr 1fr;gap:18px}
+  .full{grid-column:1/-1}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:12px;overflow:hidden}
+  .card h2{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--txt2);
+           padding:13px 16px;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:8px}
+  .card .body{padding:16px}
+  .stat-row{display:grid;grid-template-columns:repeat(5,1fr);gap:12px}
+  .stat{background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:12px 14px}
+  .stat .k{font-size:9px;letter-spacing:.12em;text-transform:uppercase;color:var(--txt3)}
+  .stat .v{font-size:20px;font-weight:700;margin-top:4px}
+  .stat .v.mono{font-size:12px;word-break:break-all;font-weight:600;color:var(--accent2)}
+  table{width:100%;border-collapse:collapse;font-size:12px}
+  th{text-align:left;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--txt3);
+     padding:9px 12px;border-bottom:1px solid var(--line)}
+  td{padding:10px 12px;border-bottom:1px solid #1c1c1f;vertical-align:middle}
+  tr:hover td{background:#161618;cursor:pointer}
+  .badge{display:inline-block;font-size:9px;font-weight:700;letter-spacing:.05em;padding:3px 8px;border-radius:5px}
+  .b-REGISTERED{background:rgba(91,141,239,.14);color:var(--blue);border:1px solid rgba(91,141,239,.3)}
+  .b-VERIFIED{background:rgba(63,178,127,.14);color:var(--ok);border:1px solid rgba(63,178,127,.3)}
+  .b-TAMPERED{background:rgba(224,83,61,.14);color:var(--bad);border:1px solid rgba(224,83,61,.3)}
+  .b-ARCHIVED{background:rgba(154,154,162,.14);color:var(--txt2);border:1px solid var(--line)}
+  input,select,button,textarea{font-family:inherit;font-size:12px;background:var(--panel2);
+     color:var(--txt);border:1px solid var(--line);border-radius:8px;padding:9px 11px;width:100%}
+  label{display:block;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--txt3);margin:10px 0 4px}
+  button{cursor:pointer;background:var(--accent);color:#15130a;font-weight:700;border:none;letter-spacing:.03em;
+         width:auto;padding:9px 16px;transition:.15s}
+  button:hover{background:var(--accent2)}
+  button.ghost{background:transparent;color:var(--txt2);border:1px solid var(--line)}
+  button.ghost:hover{color:var(--txt);border-color:var(--txt3)}
+  .row{display:flex;gap:8px;flex-wrap:wrap;align-items:flex-end}
+  .timeline{position:relative;padding-left:6px}
+  .tl-ev{display:flex;gap:12px;padding-bottom:14px;position:relative}
+  .tl-ev:before{content:'';position:absolute;left:4px;top:14px;bottom:-2px;width:1px;background:var(--line)}
+  .tl-ev:last-child:before{display:none}
+  .tl-dot{width:9px;height:9px;border-radius:50%;background:var(--accent);margin-top:4px;flex-shrink:0;z-index:1}
+  .tl-body .a{font-weight:700;font-size:12px}
+  .tl-body .s{color:var(--txt2);font-size:11px}
+  .tl-body .m{color:var(--txt3);font-size:10px;margin-top:2px}
+  .muted{color:var(--txt3)}
+  .hashcell{max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--accent2)}
+  #toast{position:fixed;bottom:20px;right:20px;background:var(--panel2);border:1px solid var(--line);
+         border-radius:10px;padding:12px 16px;max-width:380px;opacity:0;transform:translateY(10px);
+         transition:.25s;z-index:50;font-size:12px}
+  #toast.show{opacity:1;transform:none}
+  .pill-row{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}
+  .pill{font-size:10px;padding:3px 9px;border:1px solid var(--line);border-radius:20px;color:var(--txt2);cursor:pointer;background:var(--panel2)}
+  .pill:hover{border-color:var(--accent);color:var(--accent2)}
+  .scroll{max-height:340px;overflow:auto}
+  @media(max-width:980px){.wrap{grid-template-columns:1fr}.stat-row{grid-template-columns:repeat(2,1fr)}}
+</style>
+</head>
+<body>
+<header>
+  <div class="brand"><b>⛓ BELS</b><span>Blockchain Evidence Ledger · TGIE</span></div>
+  <div class="chip"><span class="dot" id="hdot"></span><span id="hstat" class="muted">connecting…</span>
+    <button class="ghost" onclick="runDemo()">▶ Bank Demo</button>
+    <button class="ghost" onclick="refreshAll()">↻ Refresh</button>
+  </div>
+</header>
+
+<div class="wrap">
+  <!-- Blockchain status -->
+  <div class="card full">
+    <h2>Blockchain Status</h2>
+    <div class="body"><div class="stat-row" id="statRow"></div></div>
+  </div>
+
+  <!-- Evidence records -->
+  <div class="card">
+    <h2>Evidence Records <span style="margin-left:auto;font-weight:400;text-transform:none;letter-spacing:0">
+      <input id="search" placeholder="search id / case / hash" style="width:200px;padding:5px 9px"
+             oninput="renderEvidence()"/></span></h2>
+    <div class="body scroll" style="padding:0">
+      <table><thead><tr><th>Evidence ID</th><th>Case</th><th>Type</th><th>Status</th><th>SHA-256</th><th>Block</th></tr></thead>
+        <tbody id="evBody"><tr><td colspan="6" class="muted" style="padding:20px">No evidence yet — upload or run the demo.</td></tr></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Detail / custody -->
+  <div class="card">
+    <h2 id="detailHdr">Evidence Detail</h2>
+    <div class="body" id="detail"><div class="muted">Select an evidence row to inspect its chain of custody, verification status and blockchain proof.</div></div>
+  </div>
+
+  <!-- Upload -->
+  <div class="card">
+    <h2>Upload &amp; Anchor Evidence</h2>
+    <div class="body">
+      <label>Case ID (blank = new case)</label><input id="upCase" placeholder="CASE-… or leave blank"/>
+      <label>Owner</label><input id="upOwner" value="investigator.rao"/>
+      <label>File</label><input type="file" id="upFile"/>
+      <div class="row" style="margin-top:14px"><button onclick="uploadEvidence()">⬆ Upload &amp; Anchor</button>
+        <button class="ghost" onclick="newCase()">+ New Case</button></div>
+    </div>
+  </div>
+
+  <!-- Verify -->
+  <div class="card">
+    <h2>Verify Integrity</h2>
+    <div class="body">
+      <label>Evidence ID</label><input id="vId" placeholder="EV-…"/>
+      <label>Re-upload file (optional — blank verifies stored file)</label><input type="file" id="vFile"/>
+      <div class="row" style="margin-top:14px"><button onclick="verifyEvidence()">🔍 Verify</button></div>
+      <div id="vResult" style="margin-top:12px"></div>
+    </div>
+  </div>
+
+  <!-- Cases -->
+  <div class="card">
+    <h2>Case Explorer</h2>
+    <div class="body scroll" id="caseList"><div class="muted">No cases.</div></div>
+  </div>
+
+  <!-- Reports -->
+  <div class="card full">
+    <h2>Forensic Reports</h2>
+    <div class="body">
+      <div class="row">
+        <div style="flex:1;min-width:200px"><label>Report</label>
+          <select id="rType">
+            <option value="blockchain_audit">Blockchain Audit</option>
+            <option value="integrity_verification">Integrity Verification</option>
+            <option value="evidence_verification">Evidence Verification (needs Evidence ID)</option>
+            <option value="chain_of_custody">Chain of Custody (needs Evidence ID)</option>
+            <option value="case_timeline">Case Timeline (needs Case ID)</option>
+          </select></div>
+        <div style="flex:1;min-width:160px"><label>Evidence ID</label><input id="rEv" placeholder="EV-…"/></div>
+        <div style="flex:1;min-width:160px"><label>Case ID</label><input id="rCase" placeholder="CASE-…"/></div>
+        <button onclick="downloadReport('pdf')">PDF</button>
+        <button class="ghost" onclick="downloadReport('json')">JSON</button>
+        <button class="ghost" onclick="downloadReport('csv')">CSV</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+const API = location.origin;
+let EVIDENCE = [], SELECTED = null;
+
+function toast(msg, bad){const t=document.getElementById('toast');t.textContent=msg;
+  t.style.borderColor=bad?'var(--bad)':'var(--line)';t.classList.add('show');
+  clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove('show'),3800);}
+const short=h=>h?h.slice(0,10)+'…'+h.slice(-6):'—';
+
+async function jget(p){const r=await fetch(API+p);if(!r.ok)throw new Error(await r.text());return r.json();}
+async function jpost(p,b){const r=await fetch(API+p,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(b)});
+  if(!r.ok)throw new Error(await r.text());return r.json();}
+
+async function refreshAll(){await Promise.all([loadStatus(),loadEvidence(),loadCases()]);}
+
+async function loadStatus(){
+  try{const s=await jget('/blockchain/status');
+    document.getElementById('hdot').style.background=s.integrity.valid?'var(--ok)':'var(--bad)';
+    document.getElementById('hstat').textContent=s.provider+' · '+s.chain_id+' · '+(s.integrity.valid?'INTACT':'COMPROMISED');
+    const cells=[['Provider',s.provider],['Height',s.height],['Blocks',s.blocks],
+      ['Evidence',s.total_evidence],['Integrity',s.integrity.valid?'✓ INTACT':'✗ BROKEN']];
+    document.getElementById('statRow').innerHTML=cells.map(([k,v])=>
+      `<div class="stat"><div class="k">${k}</div><div class="v">${v}</div></div>`).join('')+
+      `<div class="stat full" style="grid-column:1/-1"><div class="k">Head Block Hash</div><div class="v mono">${s.head_hash}</div></div>`;
+  }catch(e){document.getElementById('hstat').textContent='offline';document.getElementById('hdot').style.background='var(--bad)';}
+}
+
+async function loadEvidence(){EVIDENCE=await jget('/evidence');renderEvidence();}
+function renderEvidence(){
+  const q=(document.getElementById('search').value||'').toLowerCase();
+  const rows=EVIDENCE.filter(e=>!q||(e.evidence_id+e.case_id+e.file_hash+e.filename).toLowerCase().includes(q));
+  const b=document.getElementById('evBody');
+  if(!rows.length){b.innerHTML='<tr><td colspan="6" class="muted" style="padding:20px">No evidence.</td></tr>';return;}
+  b.innerHTML=rows.map(e=>`<tr onclick="selectEvidence('${e.evidence_id}')">
+    <td class="mono">${e.evidence_id}</td><td class="mono muted">${e.case_id}</td>
+    <td>${e.evidence_type}</td><td><span class="badge b-${e.status}">${e.status}</span></td>
+    <td class="mono hashcell" title="${e.file_hash}">${e.file_hash}</td>
+    <td class="mono muted">#${e.block_index}</td></tr>`).join('');
+}
+
+async function selectEvidence(id){
+  SELECTED=id;document.getElementById('vId').value=id;document.getElementById('rEv').value=id;
+  const [e,custody]=await Promise.all([jget('/evidence/'+id),jget('/evidence/custody/'+id)]);
+  document.getElementById('detailHdr').textContent='Evidence · '+id;
+  const meta=Object.entries(e.metadata||{}).map(([k,v])=>`${k}=${v}`).join(', ')||'—';
+  document.getElementById('detail').innerHTML=`
+    <div class="stat-row" style="grid-template-columns:1fr 1fr">
+      <div class="stat"><div class="k">Status</div><div class="v"><span class="badge b-${e.status}">${e.status}</span></div></div>
+      <div class="stat"><div class="k">Verifications</div><div class="v">${e.verification_count}</div></div>
+    </div>
+    <label>SHA-256 (anchored)</label><div class="mono" style="word-break:break-all;color:var(--accent2)">${e.file_hash}</div>
+    <label>Anchor Transaction</label><div class="mono muted" style="word-break:break-all">${e.anchor_tx_id} · block #${e.block_index}</div>
+    <label>Block Hash</label><div class="mono muted" style="word-break:break-all">${e.block_hash}</div>
+    <label>Metadata</label><div class="muted">${meta}</div>
+    <div class="pill-row"><span class="pill" onclick="custodyAct('${id}','REVIEW')">Review</span>
+      <span class="pill" onclick="custodyAct('${id}','EXPORT')">Export</span>
+      <span class="pill" onclick="custodyAct('${id}','SHARE')">Share</span>
+      <span class="pill" onclick="custodyAct('${id}','ARCHIVE')">Archive</span>
+      <span class="pill" onclick="document.getElementById('rEv').value='${id}';downloadReport('pdf','chain_of_custody')">Custody PDF</span></div>
+    <h2 style="border:0;padding:16px 0 8px">Chain of Custody · ${custody.length} events</h2>
+    <div class="timeline">${custody.map(c=>`<div class="tl-ev"><div class="tl-dot"></div>
+      <div class="tl-body"><div class="a">${c.action} <span class="muted" style="font-weight:400">· ${c.actor}</span></div>
+      <div class="s">${c.summary}</div>
+      <div class="m mono">${c.timestamp} · block #${c.block_index} · ${short(c.tx_id)}</div></div></div>`).join('')}</div>`;
+}
+
+async function custodyAct(id,action){
+  try{await jpost('/evidence/custody/'+id,{action,actor:document.getElementById('upOwner').value||'system',role:'investigator',detail:action+' via dashboard'});
+    toast(action+' recorded on-chain for '+id);selectEvidence(id);loadStatus();}
+  catch(e){toast('Denied: '+e.message,true);}
+}
+
+async function uploadEvidence(){
+  const f=document.getElementById('upFile').files[0];if(!f)return toast('Choose a file',true);
+  let cid=document.getElementById('upCase').value.trim();
+  if(!cid){const c=await jpost('/cases',{title:'Case for '+f.name,owner:document.getElementById('upOwner').value});cid=c.case_id;}
+  const fd=new FormData();fd.append('file',f);fd.append('case_id',cid);fd.append('owner',document.getElementById('upOwner').value||'system');
+  const r=await fetch(API+'/evidence/upload',{method:'POST',body:fd});
+  if(!r.ok)return toast('Upload failed: '+await r.text(),true);
+  const e=await r.json();toast('Anchored '+e.evidence_id+' in block #'+e.block_index);
+  document.getElementById('upCase').value=cid;refreshAll();setTimeout(()=>selectEvidence(e.evidence_id),200);
+}
+
+async function newCase(){const t=prompt('Case title?');if(!t)return;
+  const c=await jpost('/cases',{title:t,owner:document.getElementById('upOwner').value});
+  document.getElementById('upCase').value=c.case_id;toast('Created '+c.case_id);loadCases();}
+
+async function verifyEvidence(){
+  const id=document.getElementById('vId').value.trim();if(!id)return toast('Enter evidence ID',true);
+  const fd=new FormData();fd.append('evidence_id',id);fd.append('actor','auditor.menon');fd.append('role','auditor');
+  const f=document.getElementById('vFile').files[0];if(f)fd.append('file',f);
+  const r=await fetch(API+'/evidence/verify',{method:'POST',body:fd});
+  const v=await r.json();const ok=v.outcome==='VERIFIED';
+  document.getElementById('vResult').innerHTML=`<span class="badge b-${v.outcome==='VERIFIED'?'VERIFIED':'TAMPERED'}">${v.outcome}</span>
+    <div class="muted" style="margin-top:8px;font-size:11px">${v.message}</div>
+    <div class="mono muted" style="margin-top:6px;font-size:10px">on-chain: ${short(v.on_chain_hash)} · computed: ${short(v.computed_hash)}</div>`;
+  toast((ok?'✓ ':'✗ ')+id+' → '+v.outcome,!ok);refreshAll();if(SELECTED===id)selectEvidence(id);
+}
+
+async function loadCases(){
+  const cs=await jget('/cases');const el=document.getElementById('caseList');
+  if(!cs.length){el.innerHTML='<div class="muted">No cases.</div>';return;}
+  el.innerHTML=cs.map(c=>`<div style="padding:9px 0;border-bottom:1px solid #1c1c1f;cursor:pointer"
+    onclick="document.getElementById('rCase').value='${c.case_id}'">
+    <div class="mono" style="color:var(--accent2)">${c.case_id}</div>
+    <div>${c.title}</div><div class="muted" style="font-size:11px">${c.evidence_count} evidence · ${c.owner}</div></div>`).join('');
+}
+
+async function downloadReport(fmt,forceType){
+  const t=forceType||document.getElementById('rType').value;
+  const ev=document.getElementById('rEv').value.trim(),cs=document.getElementById('rCase').value.trim();
+  const url=`${API}/reports/${t}?fmt=${fmt}&evidence_id=${encodeURIComponent(ev)}&case_id=${encodeURIComponent(cs)}`;
+  if(fmt==='json'){const d=await jget(url.replace(API,''));toast('JSON report ready (see console)');console.log(d);return;}
+  window.open(url,'_blank');toast('Generating '+t+' ('+fmt.toUpperCase()+')');
+}
+
+async function runDemo(){toast('Running bank demonstration…');
+  try{const d=await jpost('/demo/run',{});toast('Demo complete · clean='+d.verification_clean+' · tamper='+d.tamper_detected);refreshAll();}
+  catch(e){toast('Demo failed: '+e.message,true);}}
+
+refreshAll();setInterval(loadStatus,15000);
+</script>
+</body>
+</html>

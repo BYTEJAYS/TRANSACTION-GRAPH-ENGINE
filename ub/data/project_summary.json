@@ -1,0 +1,121 @@
+{
+  "name": "TGIE \u2014 Transaction Graph Intelligence Engine",
+  "tagline": "Real-time 3D fraud-detection ecosystem with an adversarial Blue/Red core and a local AI cognitive layer (UB).",
+  "generated_at": "2026-06-26T12:35:16",
+  "what_it_is": "TGIE ingests financial transactions, builds them into a live graph, scores them with a Blue Team fraud engine, hardens that engine against an adversarial Red Team, and renders everything in a matte-black 3D trading-terminal UI. UB (Universal Brain) is the local LLM cognitive layer that understands, explains and presents the whole system.",
+  "components": [
+    {
+      "name": "TGIE Core Backend",
+      "path": "backend/",
+      "stack": "FastAPI \u00b7 networkx \u00b7 scikit-learn"
+    },
+    {
+      "name": "Frontend",
+      "path": "frontend/",
+      "stack": "React 18 \u00b7 react-force-graph-3d \u00b7 three.js"
+    },
+    {
+      "name": "UB (Universal Brain)",
+      "path": "ub/",
+      "stack": "Local Ollama (llama3.1:8b) + RAG"
+    },
+    {
+      "name": "Blue Team",
+      "path": "backend/blue_team_v2 + blue_team/bling",
+      "stack": "Deterministic graph engine + BLING forensic service"
+    },
+    {
+      "name": "Red Team",
+      "path": "red_team/",
+      "stack": "GA \u00b7 MAP-Elites \u00b7 PPO \u00b7 GraphGAN self-play"
+    }
+  ],
+  "live_urls": {
+    "backend": "https://transaction-graph-engine-production.up.railway.app",
+    "frontend_local": "http://localhost:3000",
+    "backend_local": "http://localhost:8000"
+  },
+  "file_counts_by_component": {
+    "Workspace": {
+      "files": 42,
+      "lines": 3388
+    },
+    "Blue Team (BLING / Union Bank)": {
+      "files": 253,
+      "lines": 32452
+    },
+    "Research": {
+      "files": 1,
+      "lines": 29
+    },
+    "Frontend": {
+      "files": 129,
+      "lines": 31097
+    },
+    "UB Dashboard": {
+      "files": 1,
+      "lines": 220
+    },
+    "Red Team": {
+      "files": 260,
+      "lines": 107424
+    },
+    "Datasets": {
+      "files": 2,
+      "lines": 88
+    },
+    "Tests": {
+      "files": 1,
+      "lines": 31
+    },
+    "TGIE Core Backend": {
+      "files": 53,
+      "lines": 8783
+    },
+    "Blue Team (in-engine)": {
+      "files": 68,
+      "lines": 4167
+    },
+    "UB Service (API)": {
+      "files": 3,
+      "lines": 231
+    },
+    "Documentation": {
+      "files": 19,
+      "lines": 2253
+    },
+    "UB (Universal Brain)": {
+      "files": 21,
+      "lines": 2387
+    },
+    "UB Ollama Service": {
+      "files": 2,
+      "lines": 183
+    },
+    "UB Knowledge Engine": {
+      "files": 5,
+      "lines": 624
+    },
+    "UB AI Core": {
+      "files": 4,
+      "lines": 484
+    },
+    "Deployment": {
+      "files": 9,
+      "lines": 890
+    },
+    "Configuration": {
+      "files": 1,
+      "lines": 35
+    },
+    "Scripts": {
+      "files": 4,
+      "lines": 191
+    },
+    "Monitoring": {
+      "files": 1,
+      "lines": 29
+    }
+  },
+  "total_files": 879
+}

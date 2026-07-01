@@ -1,0 +1,9 @@
+[
+  {
+    "from_account": "acc_76f08a3577",
+    "to_account": "acc_400784af1d",
+    "amount": 16985,
+    "payment_rail": "ach_transfer",
+    "timestamp": "2026-05-01T10:00:00"
+  }
+]

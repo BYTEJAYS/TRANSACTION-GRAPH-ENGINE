@@ -1,0 +1,214 @@
+[
+  {
+    "fraud_id": "CF_20260401_001",
+    "confirmed_at": "2026-04-01T09:00:00Z",
+    "fraud_type": "mule_ring_fan_in",
+    "transactions": [
+      {"from_account": "acc_a001b2c3d4", "to_account": "acc_a100e5f6a7", "amount": 18500, "payment_rail": "ach_transfer", "timestamp": "2026-03-15T10:00:00"},
+      {"from_account": "acc_a002b8c9d0", "to_account": "acc_a100e5f6a7", "amount": 17200, "payment_rail": "ach_transfer", "timestamp": "2026-03-16T11:00:00"},
+      {"from_account": "acc_a003e1f2a3", "to_account": "acc_a100e5f6a7", "amount": 19100, "payment_rail": "ach_transfer", "timestamp": "2026-03-17T09:30:00"}
+    ]
+  },
+  {
+    "fraud_id": "CF_20260405_002",
+    "confirmed_at": "2026-04-05T10:00:00Z",
+    "fraud_type": "structuring_threshold",
+    "transactions": [
+      {"from_account": "acc_b001c4d5e6", "to_account": "acc_b100f7a8b9", "amount": 49200, "payment_rail": "internal_transfer", "timestamp": "2026-03-20T14:00:00"},
+      {"from_account": "acc_b001c4d5e6", "to_account": "acc_b101c0d1e2", "amount": 49400, "payment_rail": "internal_transfer", "timestamp": "2026-03-21T15:00:00"}
+    ]
+  },
+  {
+    "fraud_id": "CF_20260410_003",
+    "confirmed_at": "2026-04-10T08:00:00Z",
+    "fraud_type": "merchant_exploitation",
+    "transactions": [
+      {"from_account": "acc_c001f3a4b5", "to_account": "acc_mchntc6d7", "amount": 8100, "payment_rail": "ach_transfer", "timestamp": "2026-03-25T10:00:00"},
+      {"from_account": "acc_c002e8f9a0", "to_account": "acc_mchntc6d7", "amount": 7900, "payment_rail": "ach_transfer", "timestamp": "2026-03-26T11:00:00"},
+      {"from_account": "acc_mchntc6d7", "to_account": "acc_c100b1c2d3", "amount": 15800, "payment_rail": "internal_transfer", "timestamp": "2026-04-08T10:00:00"}
+    ]
+  },
+  {
+    "fraud_id": "CF_20260415_004",
+    "confirmed_at": "2026-04-15T09:00:00Z",
+    "fraud_type": "festival_fanout_diwali",
+    "transactions": [
+      {"from_account": "acc_d001e4f5a6", "to_account": "acc_d101b7c8d9", "amount": 4700, "payment_rail": "p2p_transfer", "timestamp": "2025-10-20T14:00:00"},
+      {"from_account": "acc_d001e4f5a6", "to_account": "acc_d102e0f1a2", "amount": 4800, "payment_rail": "p2p_transfer", "timestamp": "2025-10-20T16:00:00"},
+      {"from_account": "acc_d001e4f5a6", "to_account": "acc_d103b3c4d5", "amount": 4600, "payment_rail": "p2p_transfer", "timestamp": "2025-10-21T13:00:00"},
+      {"from_account": "acc_d001e4f5a6", "to_account": "acc_d104e6f7a8", "amount": 4900, "payment_rail": "p2p_transfer", "timestamp": "2025-10-21T15:00:00"}
+    ]
+  },
+  {
+    "fraud_id": "CF_20260420_005",
+    "confirmed_at": "2026-04-20T10:00:00Z",
+    "fraud_type": "abandoned_node_slow",
+    "transactions": [
+      {"from_account": "acc_e001b9c0d1", "to_account": "acc_e100e2f3a4", "amount": 13000, "payment_rail": "ach_transfer", "timestamp": "2026-02-01T09:00:00"},
+      {"from_account": "acc_e002b5c6d7", "to_account": "acc_e100e2f3a4", "amount": 12500, "payment_rail": "ach_transfer", "timestamp": "2026-03-08T10:00:00"},
+      {"from_account": "acc_e003e8f9a0", "to_account": "acc_e100e2f3a4", "amount": 14000, "payment_rail": "ach_transfer", "timestamp": "2026-04-12T09:30:00"}
+    ]
+  },
+  {
+    "fraud_id": "CF_20260425_006",
+    "confirmed_at": "2026-04-25T08:30:00Z",
+    "fraud_type": "layered_mixing",
+    "transactions": [
+      {"from_account": "acc_f001b1c2d3", "to_account": "acc_f101e4f5a6", "amount": 25000, "payment_rail": "ach_transfer", "timestamp": "2026-03-01T10:00:00"},
+      {"from_account": "acc_f001b1c2d3", "to_account": "acc_f102b7c8d9", "amount": 23000, "payment_rail": "ach_transfer", "timestamp": "2026-03-01T11:00:00"},
+      {"from_account": "acc_f101e4f5a6", "to_account": "acc_f201e0f1a2", "amount": 22000, "payment_rail": "internal_transfer", "timestamp": "2026-03-08T10:00:00"},
+      {"from_account": "acc_f102b7c8d9", "to_account": "acc_f201e0f1a2", "amount": 21000, "payment_rail": "internal_transfer", "timestamp": "2026-03-08T11:00:00"},
+      {"from_account": "acc_f201e0f1a2", "to_account": "acc_f300b3c4d5", "amount": 41000, "payment_rail": "wire_transfer", "timestamp": "2026-03-20T14:00:00"}
+    ]
+  },
+  {
+    "fraud_id": "CF_20260501_007",
+    "confirmed_at": "2026-05-01T09:00:00Z",
+    "fraud_type": "cash_mule_young_account",
+    "transactions": [
+      {"from_account": "acc_g001e6f7a8", "to_account": "acc_g100b9c0d1", "amount": 55000, "payment_rail": "internal_transfer", "timestamp": "2026-04-15T10:00:00"},
+      {"from_account": "acc_g002e2f3a4", "to_account": "acc_g100b9c0d1", "amount": 48000, "payment_rail": "internal_transfer", "timestamp": "2026-04-16T11:00:00"},
+      {"from_account": "acc_g003b5c6d7", "to_account": "acc_g100b9c0d1", "amount": 52000, "payment_rail": "internal_transfer", "timestamp": "2026-04-17T09:30:00"}
+    ]
+  },
+  {
+    "fraud_id": "CF_20260505_008",
+    "confirmed_at": "2026-05-05T10:00:00Z",
+    "fraud_type": "bipartite_high_density",
+    "transactions": [
+      {"from_account": "acc_h001e8f9a0", "to_account": "acc_h100b1c2d3", "amount": 12000, "payment_rail": "ach_transfer", "timestamp": "2026-04-20T10:00:00"},
+      {"from_account": "acc_h002e4f5a6", "to_account": "acc_h100b1c2d3", "amount": 11500, "payment_rail": "ach_transfer", "timestamp": "2026-04-20T11:00:00"},
+      {"from_account": "acc_h003b7c8d9", "to_account": "acc_h100b1c2d3", "amount": 13000, "payment_rail": "ach_transfer", "timestamp": "2026-04-21T10:00:00"},
+      {"from_account": "acc_h004e0f1a2", "to_account": "acc_h100b1c2d3", "amount": 12500, "payment_rail": "ach_transfer", "timestamp": "2026-04-21T11:00:00"},
+      {"from_account": "acc_h005b3c4d5", "to_account": "acc_h100b1c2d3", "amount": 11000, "payment_rail": "ach_transfer", "timestamp": "2026-04-22T10:00:00"}
+    ]
+  },
+  {
+    "fraud_id": "CF_20260510_009",
+    "confirmed_at": "2026-05-10T09:00:00Z",
+    "fraud_type": "p2p_velocity_burst",
+    "transactions": [
+      {"from_account": "acc_i001e6f7a8", "to_account": "acc_i100b9c0d1", "amount": 9500, "payment_rail": "p2p_transfer", "timestamp": "2026-04-25T14:00:00"},
+      {"from_account": "acc_i001e6f7a8", "to_account": "acc_i101e2f3a4", "amount": 9200, "payment_rail": "p2p_transfer", "timestamp": "2026-04-25T14:10:00"},
+      {"from_account": "acc_i001e6f7a8", "to_account": "acc_i102b5c6d7", "amount": 9800, "payment_rail": "p2p_transfer", "timestamp": "2026-04-25T14:20:00"},
+      {"from_account": "acc_i001e6f7a8", "to_account": "acc_i103e8f9a0", "amount": 9600, "payment_rail": "p2p_transfer", "timestamp": "2026-04-25T14:30:00"},
+      {"from_account": "acc_i001e6f7a8", "to_account": "acc_i104b1c2d3", "amount": 9400, "payment_rail": "p2p_transfer", "timestamp": "2026-04-25T14:40:00"},
+      {"from_account": "acc_i001e6f7a8", "to_account": "acc_i105e4f5a6", "amount": 9700, "payment_rail": "p2p_transfer", "timestamp": "2026-04-25T14:50:00"}
+    ]
+  },
+  {
+    "fraud_id": "CF_20260515_010",
+    "confirmed_at": "2026-05-15T10:00:00Z",
+    "fraud_type": "mule_ring_low_slow",
+    "transactions": [
+      {"from_account": "acc_j001b7c8d9", "to_account": "acc_j100e0f1a2", "amount": 14200, "payment_rail": "ach_transfer", "timestamp": "2026-02-10T10:00:00"},
+      {"from_account": "acc_j002b3c4d5", "to_account": "acc_j100e0f1a2", "amount": 13800, "payment_rail": "ach_transfer", "timestamp": "2026-03-17T11:00:00"},
+      {"from_account": "acc_j003e6f7a8", "to_account": "acc_j100e0f1a2", "amount": 15100, "payment_rail": "ach_transfer", "timestamp": "2026-04-21T09:30:00"}
+    ]
+  },
+  {
+    "fraud_id": "CF_20260405_011",
+    "confirmed_at": "2026-04-05T09:00:00Z",
+    "fraud_type": "merchant_bipartite_delayed",
+    "transactions": [
+      {"from_account": "acc_k001b9c0d1", "to_account": "acc_kmerche2f3", "amount": 8500, "payment_rail": "ach_transfer", "timestamp": "2026-03-10T10:00:00"},
+      {"from_account": "acc_k002a4b5c6", "to_account": "acc_kmerche2f3", "amount": 8100, "payment_rail": "ach_transfer", "timestamp": "2026-03-11T11:00:00"},
+      {"from_account": "acc_kmerche2f3", "to_account": "acc_k100d7e8f9", "amount": 16300, "payment_rail": "internal_transfer", "timestamp": "2026-03-28T14:00:00"}
+    ]
+  },
+  {
+    "fraud_id": "CF_20260412_012",
+    "confirmed_at": "2026-04-12T10:00:00Z",
+    "fraud_type": "festival_gifting_eid",
+    "transactions": [
+      {"from_account": "acc_l001a0b1c2", "to_account": "acc_l101d3e4f5", "amount": 4500, "payment_rail": "p2p_transfer", "timestamp": "2026-03-30T14:00:00"},
+      {"from_account": "acc_l001a0b1c2", "to_account": "acc_l102a6b7c8", "amount": 4300, "payment_rail": "p2p_transfer", "timestamp": "2026-03-30T16:00:00"},
+      {"from_account": "acc_l001a0b1c2", "to_account": "acc_l103d9e0f1", "amount": 4700, "payment_rail": "p2p_transfer", "timestamp": "2026-03-31T13:00:00"},
+      {"from_account": "acc_l001a0b1c2", "to_account": "acc_l104a2b3c4", "amount": 4600, "payment_rail": "p2p_transfer", "timestamp": "2026-03-31T15:00:00"},
+      {"from_account": "acc_l001a0b1c2", "to_account": "acc_l105d5e6f7", "amount": 4400, "payment_rail": "p2p_transfer", "timestamp": "2026-04-01T12:00:00"}
+    ]
+  },
+  {
+    "fraud_id": "CF_20260418_013",
+    "confirmed_at": "2026-04-18T09:00:00Z",
+    "fraud_type": "chain_three_hop",
+    "transactions": [
+      {"from_account": "acc_m001a8b9c0", "to_account": "acc_m002d1e2f3", "amount": 35000, "payment_rail": "ach_transfer", "timestamp": "2026-04-01T10:00:00"},
+      {"from_account": "acc_m002d1e2f3", "to_account": "acc_m003a4b5c6", "amount": 33000, "payment_rail": "internal_transfer", "timestamp": "2026-04-05T11:00:00"},
+      {"from_account": "acc_m003a4b5c6", "to_account": "acc_m004d7e8f9", "amount": 31000, "payment_rail": "wire_transfer", "timestamp": "2026-04-12T14:00:00"}
+    ]
+  },
+  {
+    "fraud_id": "CF_20260422_014",
+    "confirmed_at": "2026-04-22T10:00:00Z",
+    "fraud_type": "abandoned_node_four_sources",
+    "transactions": [
+      {"from_account": "acc_n001a0b1c2", "to_account": "acc_n100d3e4f5", "amount": 11500, "payment_rail": "ach_transfer", "timestamp": "2026-01-15T09:00:00"},
+      {"from_account": "acc_n002a6b7c8", "to_account": "acc_n100d3e4f5", "amount": 12000, "payment_rail": "ach_transfer", "timestamp": "2026-02-20T10:00:00"},
+      {"from_account": "acc_n003d9e0f1", "to_account": "acc_n100d3e4f5", "amount": 11200, "payment_rail": "ach_transfer", "timestamp": "2026-03-27T09:30:00"},
+      {"from_account": "acc_n004a2b3c4", "to_account": "acc_n100d3e4f5", "amount": 13000, "payment_rail": "ach_transfer", "timestamp": "2026-04-20T10:00:00"}
+    ]
+  },
+  {
+    "fraud_id": "CF_20260428_015",
+    "confirmed_at": "2026-04-28T09:00:00Z",
+    "fraud_type": "structuring_just_under",
+    "transactions": [
+      {"from_account": "acc_o001d5e6f7", "to_account": "acc_o100a8b9c0", "amount": 199500, "payment_rail": "wire_transfer", "timestamp": "2026-04-10T10:00:00"},
+      {"from_account": "acc_o001d5e6f7", "to_account": "acc_o101d1e2f3", "amount": 198000, "payment_rail": "wire_transfer", "timestamp": "2026-04-15T11:00:00"}
+    ]
+  },
+  {
+    "fraud_id": "CF_20260502_016",
+    "confirmed_at": "2026-05-02T10:00:00Z",
+    "fraud_type": "fan_in_geo_spread",
+    "transactions": [
+      {"from_account": "acc_p001a4b5c6", "to_account": "acc_p100d7e8f9", "amount": 22000, "payment_rail": "internal_transfer", "timestamp": "2026-04-20T10:00:00"},
+      {"from_account": "acc_p002a0b1c2", "to_account": "acc_p100d7e8f9", "amount": 21000, "payment_rail": "internal_transfer", "timestamp": "2026-04-20T11:00:00"},
+      {"from_account": "acc_p003d3e4f5", "to_account": "acc_p100d7e8f9", "amount": 23000, "payment_rail": "internal_transfer", "timestamp": "2026-04-21T10:00:00"}
+    ]
+  },
+  {
+    "fraud_id": "CF_20260507_017",
+    "confirmed_at": "2026-05-07T09:30:00Z",
+    "fraud_type": "channel_hop_multi_rail",
+    "transactions": [
+      {"from_account": "acc_q001a6b7c8", "to_account": "acc_q100d9e0f1", "amount": 45000, "payment_rail": "ach_transfer", "timestamp": "2026-04-25T10:00:00"},
+      {"from_account": "acc_q100d9e0f1", "to_account": "acc_q200a2b3c4", "amount": 42000, "payment_rail": "internal_transfer", "timestamp": "2026-04-26T11:00:00"},
+      {"from_account": "acc_q200a2b3c4", "to_account": "acc_q300d5e6f7", "amount": 40000, "payment_rail": "p2p_transfer", "timestamp": "2026-04-27T10:00:00"}
+    ]
+  },
+  {
+    "fraud_id": "CF_20260512_018",
+    "confirmed_at": "2026-05-12T10:00:00Z",
+    "fraud_type": "mule_ring_medium",
+    "transactions": [
+      {"from_account": "acc_r001a8b9c0", "to_account": "acc_r100d1e2f3", "amount": 16000, "payment_rail": "ach_transfer", "timestamp": "2026-05-01T10:00:00"},
+      {"from_account": "acc_r002a4b5c6", "to_account": "acc_r100d1e2f3", "amount": 15500, "payment_rail": "ach_transfer", "timestamp": "2026-05-02T11:00:00"},
+      {"from_account": "acc_r003d7e8f9", "to_account": "acc_r100d1e2f3", "amount": 17000, "payment_rail": "ach_transfer", "timestamp": "2026-05-03T09:30:00"},
+      {"from_account": "acc_r004a0b1c2", "to_account": "acc_r100d1e2f3", "amount": 14000, "payment_rail": "ach_transfer", "timestamp": "2026-05-04T10:00:00"}
+    ]
+  },
+  {
+    "fraud_id": "CF_20260517_019",
+    "confirmed_at": "2026-05-17T09:00:00Z",
+    "fraud_type": "dormancy_then_burst",
+    "transactions": [
+      {"from_account": "acc_s001d3e4f5", "to_account": "acc_s100a6b7c8", "amount": 8000, "payment_rail": "p2p_transfer", "timestamp": "2025-12-01T10:00:00"},
+      {"from_account": "acc_s100a6b7c8", "to_account": "acc_s200d9e0f1", "amount": 85000, "payment_rail": "internal_transfer", "timestamp": "2026-05-10T14:00:00"}
+    ]
+  },
+  {
+    "fraud_id": "CF_20260519_020",
+    "confirmed_at": "2026-05-19T09:00:00Z",
+    "fraud_type": "merchant_network_three_nodes",
+    "transactions": [
+      {"from_account": "acc_t001a2b3c4", "to_account": "acc_tmrch1d5e6", "amount": 9000, "payment_rail": "ach_transfer", "timestamp": "2026-05-05T10:00:00"},
+      {"from_account": "acc_t002f7a8b9", "to_account": "acc_tmrch1d5e6", "amount": 8500, "payment_rail": "ach_transfer", "timestamp": "2026-05-06T11:00:00"},
+      {"from_account": "acc_t003c0d1e2", "to_account": "acc_tmrch2f3a4", "amount": 9500, "payment_rail": "ach_transfer", "timestamp": "2026-05-05T14:00:00"},
+      {"from_account": "acc_t004b5c6d7", "to_account": "acc_tmrch2f3a4", "amount": 8800, "payment_rail": "ach_transfer", "timestamp": "2026-05-07T10:00:00"},
+      {"from_account": "acc_tmrch1d5e6", "to_account": "acc_tsink8e9f0", "amount": 17200, "payment_rail": "internal_transfer", "timestamp": "2026-05-18T11:00:00"},
+      {"from_account": "acc_tmrch2f3a4", "to_account": "acc_tsink8e9f0", "amount": 18000, "payment_rail": "internal_transfer", "timestamp": "2026-05-18T14:00:00"}
+    ]
+  }
+]

@@ -1,0 +1,9 @@
+[
+  {
+    "from_account": "acc_c52787686d",
+    "to_account": "acc_34b8825060",
+    "amount": 24155,
+    "payment_rail": "p2p_transfer",
+    "timestamp": "2026-05-01T10:00:00"
+  }
+]

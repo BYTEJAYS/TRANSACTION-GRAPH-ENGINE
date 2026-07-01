@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>CRUCIBLE — Adversarial Evolution Console</title>
+<style>
+  :root{--bg:#0a0c10;--panel:#12161d;--line:#222a35;--fg:#e6edf3;--mut:#8b98a8;
+        --red:#ff5d6c;--grn:#3fd07f;--ylw:#f7c948;--blu:#5aa9ff;--vio:#b08cff;}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--fg);font:14px/1.5 -apple-system,Segoe UI,Roboto,sans-serif}
+  header{padding:16px 22px;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+  header h1{font-size:17px;margin:0;letter-spacing:.5px}
+  .tag{font-size:11px;color:var(--mut);border:1px solid var(--line);padding:2px 8px;border-radius:20px}
+  .safe{color:var(--grn);border-color:#1f4f36}
+  main{padding:18px 22px;display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:16px;max-width:1400px}
+  .panel{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:16px}
+  .panel h2{font-size:12px;text-transform:uppercase;letter-spacing:1px;color:var(--mut);margin:0 0 12px}
+  .controls{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+  select,button{background:#1b212b;color:var(--fg);border:1px solid var(--line);border-radius:8px;padding:7px 11px;font-size:13px;cursor:pointer}
+  button.primary{background:#1b3b66;border-color:#2f5d9e}
+  button:hover{filter:brightness(1.15)}
+  .kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+  .kpi{background:#0e1218;border:1px solid var(--line);border-radius:10px;padding:10px}
+  .kpi .v{font-size:22px;font-weight:600}
+  .kpi .l{font-size:10px;color:var(--mut);text-transform:uppercase;letter-spacing:.6px}
+  table{width:100%;border-collapse:collapse;font-size:12.5px}
+  th,td{text-align:left;padding:6px 8px;border-bottom:1px solid var(--line)}
+  th{color:var(--mut);font-weight:500;font-size:11px;text-transform:uppercase}
+  .bar{height:7px;border-radius:6px;background:#0e1218;overflow:hidden}
+  .bar>i{display:block;height:100%}
+  .pill{font-size:11px;padding:1px 8px;border-radius:20px;display:inline-block}
+  .evaded{background:#3a1d22;color:var(--red)} .contained{background:#16331f;color:var(--grn)}
+  .evolving{background:#2a2536;color:var(--vio)}
+  .blind_spot{color:var(--red)} .weak{color:var(--ylw)} .moderate{color:var(--blu)} .strong{color:var(--grn)}
+  .alert{border:1px solid #3a2b33;border-radius:10px;padding:11px;margin-bottom:10px;background:#15101300}
+  .alert .row{display:flex;justify-content:space-between;gap:10px;align-items:center}
+  .muted{color:var(--mut)} .mono{font-family:ui-monospace,Menlo,monospace;font-size:11px}
+  .full{grid-column:1/-1}
+  .empty{color:var(--mut);font-style:italic;padding:8px 0}
+</style>
+</head>
+<body>
+<header>
+  <h1>⚔️ CRUCIBLE — Adversarial Evolution Console</h1>
+  <span class="tag" id="engineTag">Blue Team V2: —</span>
+  <span class="tag" id="llmTag" title="Ollama adversarial strategist">🧠 strategist: —</span>
+  <span class="tag safe">🔒 Investigator-gated · Red never auto-trains Blue</span>
+  <span class="tag" id="updTag"></span>
+</header>
+<main>
+  <section class="panel full">
+    <h2>Campaign Control</h2>
+    <div class="controls">
+      <label class="muted">Difficulty
+        <select id="difficulty">
+          <option>easy</option><option selected>medium</option><option>hard</option>
+          <option>expert</option><option>nation_state</option><option>impossible</option>
+        </select>
+      </label>
+      <label class="muted">Family
+        <select id="family"><option value="">▸ AI planner picks weak spot</option></select>
+      </label>
+      <button class="primary" onclick="attack()">▶ Launch Attack</button>
+      <button onclick="campaign(10)">⚡ Run Campaign ×10</button>
+      <button id="autoBtn" onclick="toggleAuto()">♾ Start Auto-Run</button>
+      <button id="llmBtn" onclick="toggleLLM()">🧠 Enable LLM Strategist</button>
+      <label class="muted" title="ramp Easy→Impossible"><input type="checkbox" id="rotate"/> rotate difficulty</label>
+      <button onclick="refresh()">↻ Refresh</button>
+      <span class="tag" id="runnerTag">auto: off</span>
+    </div>
+  </section>
+
+  <section class="panel">
+    <h2>Performance Metrics</h2>
+    <div class="kpis" id="kpis"></div>
+  </section>
+
+  <section class="panel">
+    <h2>Blue Team Weakness Report</h2>
+    <table><thead><tr><th>Category</th><th>Detection</th><th>Status</th></tr></thead>
+    <tbody id="weakBody"></tbody></table>
+  </section>
+
+  <section class="panel">
+    <h2>Learning Curve — Blue detection rate over time</h2>
+    <svg id="curve" viewBox="0 0 300 90" preserveAspectRatio="none" style="width:100%;height:90px"></svg>
+    <div class="muted mono" id="curveMeta">—</div>
+  </section>
+
+  <section class="panel full">
+    <h2>🚨 Investigator Decision Queue — successful (missed) attacks</h2>
+    <div id="alerts"></div>
+  </section>
+
+  <section class="panel full">
+    <h2>Recent Attacks — Evolution History</h2>
+    <table><thead><tr><th>Family</th><th>Targeted</th><th>Diff</th><th>Gens</th>
+    <th>Status</th><th>Blue verdict path</th></tr></thead>
+    <tbody id="attackBody"></tbody></table>
+  </section>
+</main>
+
+<script>
+const API = "/api/v1/evolution";
+const $ = id => document.getElementById(id);
+async function jget(u){const r=await fetch(API+u);return (await r.json()).data;}
+async function jpost(u,b){const r=await fetch(API+u,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(b||{})});return (await r.json()).data;}
+
+async function loadLibrary(){
+  const lib = await jget("/library");
+  const sel = $("family");
+  lib.families.forEach(f=>{const o=document.createElement("option");o.value=f.name;
+    o.textContent=`${f.name} (${f.category})`;sel.appendChild(o);});
+}
+async function attack(){
+  await jpost("/attacks",{difficulty:$("difficulty").value, family:$("family").value||null});
+  refresh();
+}
+async function campaign(n){
+  $("updTag").textContent="running…";
+  await jpost("/campaigns",{n_attacks:n, difficulty:$("difficulty").value});
+  refresh();
+}
+let autoTimer=null;
+async function toggleAuto(){
+  const st = await jget("/campaigns/auto/status");
+  if(st.running){
+    await jpost("/campaigns/auto/stop",{});
+    if(autoTimer){clearInterval(autoTimer);autoTimer=null;}
+  } else {
+    await jpost("/campaigns/auto/start",{difficulty:$("difficulty").value,
+      interval_seconds:2, rotate_difficulty:$("rotate").checked});
+    if(!autoTimer) autoTimer=setInterval(refresh, 2500);
+  }
+  refresh();
+}
+async function toggleLLM(){
+  const st = await jget("/llm/status");
+  await jpost("/llm/config",{enabled: !st.use_llm});
+  refresh();
+}
+function drawCurve(lc){
+  const svg=$("curve"); if(!lc||!lc.points||!lc.points.length){svg.innerHTML="";$("curveMeta").textContent="run attacks to see the trend";return;}
+  const p=lc.points, n=p.length, W=300,H=90;
+  const path=p.map((y,i)=>`${(i/(Math.max(1,n-1)))*W},${H-y*H}`).join(" ");
+  svg.innerHTML=`<polyline fill="none" stroke="#5aa9ff" stroke-width="2" points="${path}"/>`+
+    `<line x1="0" y1="${H/2}" x2="${W}" y2="${H/2}" stroke="#222a35" stroke-dasharray="3"/>`;
+  const arrow = lc.improving? "↓ harder to detect" : "↑";
+  $("curveMeta").textContent=`first ${pct(lc.first)} → last ${pct(lc.last)}  ${lc.improving===null?"":arrow}`;
+}
+async function syncRunner(){
+  const st = await jget("/campaigns/auto/status");
+  $("autoBtn").textContent = st.running ? "⏸ Stop Auto-Run" : "♾ Start Auto-Run";
+  $("runnerTag").textContent = st.running
+    ? `auto: ON · ${st.attacks_launched} launched · ${st.evaded} evaded · ${st.difficulty}`
+    : "auto: off";
+  if(st.running && !autoTimer) autoTimer=setInterval(refresh, 2500);
+}
+async function decide(id,action){
+  const who = prompt("Investigator ID (approval is logged):","investigator_01");
+  if(!who) return;
+  await jpost(`/alerts/${id}/${action}`,{investigator_id:who,notes:action});
+  refresh();
+}
+function pct(x){return x==null?"—":Math.round(x*100)+"%";}
+function colorFor(r){return r>=.9?"var(--grn)":r>=.6?"var(--blu)":r>=.3?"var(--ylw)":"var(--red)";}
+
+async function refresh(){
+  const s = await jget("/dashboard");
+  $("engineTag").textContent = "Blue Team V2: "+s.blue_engine_version;
+  $("updTag").textContent = "updated "+new Date().toLocaleTimeString();
+  const strat = s.strategist||{};
+  $("llmTag").textContent = `🧠 ${strat.available? (strat.use_llm?"LLM ON":"LLM ready"):"LLM offline"} · ${strat.model||"—"} · ${strat.invocations||0} calls · mem ${strat.strategy_memory||0}`;
+  $("llmTag").className = "tag" + (strat.use_llm? " safe":"");
+  $("llmBtn").textContent = strat.use_llm? "🧠 Disable LLM Strategist":"🧠 Enable LLM Strategist";
+  drawCurve(s.learning_curve);
+  const m = s.metrics;
+  $("kpis").innerHTML = [
+    ["Blue Detection",pct(m.blue_detection_rate)],
+    ["Attacks",m.attacks],
+    ["Pending Alerts",s.pending_alerts],
+    ["False Positives",m.false_positives],
+    ["Avg Gens→Evade",m.avg_generations_to_evasion??"—"],
+    ["Top Bypassed",m.top_bypassed_detector??"—"],
+    ["Weakest Cat",m.weakest_category??"—"],
+    ["Strongest Cat",m.strongest_category??"—"],
+    ["Best Mutation",m.most_effective_mutation??"—"],
+  ].map(([l,v])=>`<div class="kpi"><div class="v">${v}</div><div class="l">${l}</div></div>`).join("");
+
+  const cats = s.weakness_report.categories;
+  $("weakBody").innerHTML = Object.keys(cats).map(c=>{
+    const d=cats[c]; const r=d.detection_rate;
+    const w = r==null?0:Math.round(r*100);
+    return `<tr><td>${c}</td><td style="min-width:90px">
+      <div class="bar"><i style="width:${w}%;background:${colorFor(r||0)}"></i></div>
+      <span class="muted mono">${r==null?"unexplored":pct(r)}</span></td>
+      <td class="${d.status}">${d.status}</td></tr>`;
+  }).join("");
+
+  const alerts = await jget("/alerts?status=pending");
+  $("alerts").innerHTML = alerts.length? alerts.map(a=>`
+    <div class="alert"><div class="row">
+      <div><b>${a.attack_family}</b> <span class="muted">· targeted ${a.weakness_targeted} · ${a.difficulty}</span><br>
+        <span class="mono muted">Blue: ${a.blue_verdict} (risk ${a.blue_risk}) · ₹${a.rupees_at_risk.toLocaleString()} at risk · gen ${a.generation}</span></div>
+      <div><button class="primary" onclick="decide('${a.alert_id}','approve')">✓ Approve Learning</button>
+        <button onclick="decide('${a.alert_id}','reject')">✕ Reject</button></div>
+    </div></div>`).join("") : `<div class="empty">No missed attacks awaiting review. Blue Team is holding.</div>`;
+
+  $("attackBody").innerHTML = (s.recent_attacks||[]).slice().reverse().map(a=>{
+    const path = a.generations.map(g=>`${g.strategist==='llm'?'🧠':''}${g.verdict}${g.risk}`).join(" → ");
+    const llmGen = a.generations.find(g=>g.strategist==='llm' && g.llm_reasoning);
+    const reason = llmGen? ` title="🧠 ${llmGen.llm_reasoning.replace(/"/g,'&quot;')}"`:"";
+    return `<tr${reason}><td>${a.family}</td><td class="muted">${a.weakness_targeted}</td>
+      <td>${a.difficulty}</td><td>${a.generation_count}</td>
+      <td><span class="pill ${a.status}">${a.status}</span></td>
+      <td class="mono muted">${path}</td></tr>`;
+  }).join("") || `<tr><td colspan=6 class="empty">No attacks yet — launch one above.</td></tr>`;
+  syncRunner();
+}
+loadLibrary().then(refresh);
+</script>
+</body>
+</html>

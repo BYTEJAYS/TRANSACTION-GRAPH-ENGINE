@@ -1,0 +1,145 @@
+# Combined local stack: Transaction Graph Engine + Blue Team
+#
+# Expected directory layout:
+#   transaction-graph-intelligence/   ← this repo
+#   bling-blue-team/                  ← peer repo (git clone beside this one)
+#
+# Usage:
+#   docker compose up --build
+#   docker compose down -v            # remove volumes
+
+networks:
+  tgie-net:
+    driver: bridge
+
+volumes:
+  tgie_postgres_data:
+  blue_postgres_data:
+  redis_data:
+
+services:
+
+  # ── Shared Redis ─────────────────────────────────────────────────────────────
+  redis:
+    image: redis:7-alpine
+    container_name: tgie-redis
+    networks: [tgie-net]
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+
+  # ── Blue Team PostgreSQL ─────────────────────────────────────────────────────
+  blue-postgres:
+    image: postgres:15-alpine
+    container_name: blue-postgres
+    networks: [tgie-net]
+    environment:
+      POSTGRES_DB: bling_blue
+      POSTGRES_USER: bling_user
+      POSTGRES_PASSWORD: bling_secret
+    volumes:
+      - blue_postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U bling_user -d bling_blue"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ── Blue Team API ────────────────────────────────────────────────────────────
+  blue-team-api:
+    build:
+      context: ../bling-blue-team
+      dockerfile: Dockerfile
+    container_name: blue-team-api
+    networks: [tgie-net]
+    ports:
+      - "8001:8000"
+    env_file:
+      - ../bling-blue-team/.env.docker
+    environment:
+      POSTGRES_URL: postgresql://bling_user:bling_secret@blue-postgres:5432/bling_blue
+      REDIS_URL: redis://redis:6379
+      CELERY_BROKER_URL: redis://redis:6379/1
+      CELERY_RESULT_BACKEND: redis://redis:6379/2
+    depends_on:
+      blue-postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    restart: on-failure
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+
+  # ── Blue Team Celery Worker ──────────────────────────────────────────────────
+  blue-team-worker:
+    build:
+      context: ../bling-blue-team
+      dockerfile: Dockerfile
+    container_name: blue-team-worker
+    networks: [tgie-net]
+    command: celery -A app.celery_app worker --loglevel=info --concurrency=2
+    env_file:
+      - ../bling-blue-team/.env.docker
+    environment:
+      POSTGRES_URL: postgresql://bling_user:bling_secret@blue-postgres:5432/bling_blue
+      REDIS_URL: redis://redis:6379
+      CELERY_BROKER_URL: redis://redis:6379/1
+      CELERY_RESULT_BACKEND: redis://redis:6379/2
+    depends_on:
+      blue-postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    restart: on-failure
+
+  # ── TGIE Backend ─────────────────────────────────────────────────────────────
+  tgie-backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: tgie-backend
+    networks: [tgie-net]
+    ports:
+      - "8000:8000"
+    env_file:
+      - ./backend/.env.docker
+    environment:
+      BLUE_TEAM_URL: http://blue-team-api:8000
+      KAFKA_ENABLED: "false"
+      LOG_LEVEL: INFO
+    depends_on:
+      blue-team-api:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    restart: on-failure
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+
+  # ── TGIE Frontend ────────────────────────────────────────────────────────────
+  tgie-frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        VITE_API_URL: http://localhost:8000
+    container_name: tgie-frontend
+    networks: [tgie-net]
+    ports:
+      - "3000:3000"
+    depends_on:
+      tgie-backend:
+        condition: service_healthy
+    restart: on-failure

@@ -1,0 +1,526 @@
+{
+  "meta": {
+    "purpose": "Judge Mode question bank (Phase 10). Curated likely questions + ideal grounded answers. UB also answers ANY unlisted question dynamically via RAG in 'judge' mode.",
+    "usage": "ub.ai_core can seed Judge Mode with these; the dashboard surfaces them as quick-asks.",
+    "note": "Answers are deliberately honest about limitations (e.g. 56.7% FP, 55/100 readiness) — judges reward candor backed by a plan.",
+    "total_questions": 113
+  },
+  "categories": {
+    "vision_and_problem": [
+      {
+        "q": "What problem are you solving?",
+        "a": "Financial fraud — especially money laundering — hides in the RELATIONSHIPS between accounts, not single transactions. TGIE ingests transactions, builds them into a live graph, and detects laundering patterns (layering, mule networks, structuring, cash-out) that per-transaction rules miss. It then hardens that detector with an adversarial Red Team and explains everything through UB, a local AI layer."
+      },
+      {
+        "q": "Why is TGIE unique?",
+        "a": "Three things together: (1) a deterministic, explainable graph fraud engine (11 detectors, auditable evidence) rather than a black-box score; (2) a full adversarial self-play loop where a Red Team continually evolves evasions and the Blue Team grows new context signals to close them — we proved the arms race ends in economics, not a magic detector; (3) UB, a fully LOCAL LLM cognitive layer that can explain and present the entire system from indexed source code."
+      },
+      {
+        "q": "Why did you build this?",
+        "a": "Because banks need detection they can defend in an audit AND that survives adversaries who adapt. A single static model rots; TGIE treats hardening as a continuous Red-vs-Blue process and keeps a living explanation of itself via UB."
+      }
+    ],
+    "ai_and_ub": [
+      {
+        "q": "Why use AI / an LLM here?",
+        "a": "Two roles. The fraud detection itself is mostly deterministic graph analytics (explainability matters in finance). The LLM is UB — the cognitive layer that indexes the whole codebase and answers questions, explains code, and presents the project. It runs locally on Ollama (llama3.1:8b) so no data leaves the machine."
+      },
+      {
+        "q": "How does UB work?",
+        "a": "UB is Retrieval-Augmented Generation over the TGIE workspace. It chunks and embeds every source/doc file (nomic-embed-text) into a local vector store, retrieves the most relevant chunks for a question, injects them + project summaries into a local llama3.1:8b prompt, and answers with citations to real file paths. It has operating modes — founder, developer, presentation, demo, judge — each a persona over the same grounded knowledge."
+      },
+      {
+        "q": "Did you fine-tune a model?",
+        "a": "No — deliberately. Fine-tuning is expensive and goes stale. UB uses RAG so it always reflects the CURRENT code: when files change, the watcher re-indexes and embeddings update. That keeps UB accurate and cheap."
+      },
+      {
+        "q": "Does UB send my data anywhere?",
+        "a": "No. Ollama runs the model locally; the vector index is built from the local workspace only. UB is designed for offline, on-device operation."
+      }
+    ],
+    "architecture": [
+      {
+        "q": "Walk me through the architecture.",
+        "a": "Frontend (React + three.js, :3000) ⇄ TGIE Core Backend (FastAPI, :8000) over WebSocket. The backend builds transactions into a networkx graph, scores them with the Blue Team (V1 ML or V2 deterministic), and broadcasts verdicts. A separate BLING Blue Team service (:8001) adds Postgres+Neo4j forensic depth. The Red Team and UB run alongside; UB mounts on the backend under /ub/*. UB's own pipeline: Frontend → FastAPI → UB Core → Knowledge Engine → Vector DB → Ollama → llama3.1:8b."
+      },
+      {
+        "q": "What's your tech stack?",
+        "a": "Backend: FastAPI, Uvicorn, networkx, scikit-learn. Frontend: React 18, react-force-graph-3d, three.js, Vite. Blue Team V2: pure deterministic graph analytics. Red Team: pure-NumPy GA/MAP-Elites/PPO/GraphGAN. UB: local Ollama + a dependency-light NumPy vector store."
+      }
+    ],
+    "graph_engine": [
+      {
+        "q": "How does the graph system work?",
+        "a": "Every transaction adds nodes (accounts) and a directed weighted edge. graph_engine/graph_manager.py (networkx) maintains connected components. The Blue Team computes per-node metrics and runs detectors over each component; the frontend lays it out with a decentralized multi-scale force simulation and colors nodes by role (origin/hub/mule/relay/sink) and risk."
+      },
+      {
+        "q": "How do you detect laundering specifically?",
+        "a": "Blue Team V2 has 11 detectors — layering, smurfing, mule_accounts, fan_in, fan_out, velocity, cashout, circular_flow, bridge_accounts, dormant_accounts, synthetic_networks — each producing evidence that feeds an 18-factor per-node score, aggregated to a cluster verdict (thresholds LOG 0.38 / REVIEW 0.62 / HIGH_RISK 0.83). A circular A→B→C→D→A flow, for example, returns FRAUD ~0.97 via circular_path detection."
+      }
+    ],
+    "blue_team": [
+      {
+        "q": "Explain the Blue Team.",
+        "a": "It's the defender. V1 is an ML/statistical pipeline (IsolationForest + XGBoost + rules); V2 is a deterministic graph engine (11 detectors, explainable evidence) that beats V1 on benchmark (graph-F1 0.96 vs 0.76) and is ~14x faster. A standalone BLING service adds Neo4j + forensic PDF evidence for the Union Bank use case."
+      },
+      {
+        "q": "What are the Blue Team's weaknesses?",
+        "a": "We found them ourselves with the Red Team and we're candid: (B1) it scores each graph component in isolation — no cross-component correlation; and a 56.7% false-positive rate on REALISTIC legitimate traffic. The fix is context signals (provenance/behaviour/relationship), and provenance alone drove that FP to ~0% in our prototype. Honesty here is the point — we measured it instead of hiding it."
+      }
+    ],
+    "red_team": [
+      {
+        "q": "Explain the Red Team.",
+        "a": "It's the adversary that hardens the Blue Team. It evolves synthetic laundering attacks (GA, MAP-Elites quality-diversity, a PPO RL agent, and a GraphGAN surrogate) against the REAL detection engine, finds evasions, and each evasion reveals a missing defensive signal. We ran the full loop: every attack found the defender's next blind spot, every counter supplied it, and it terminates in economics — to evade the final stack the attacker must pre-move legit value proportional to the laundering, a year ahead."
+      },
+      {
+        "q": "Isn't building attack tools dangerous?",
+        "a": "It's a defensive research harness: it attacks our own detector on synthetic data, with an isolation contract and human-in-the-loop review, to make the defender stronger. The frontend panel only trains the Blue Team on Blue-MISSED evasions a human approves — never on garbage."
+      }
+    ],
+    "security": [
+      {
+        "q": "How is security maintained?",
+        "a": "UB and detection run locally (no data egress). Honestly, the public TGIE deploy is still pre-production: it needs authN on the WebSocket/ingress, secret-manager-backed keys, and the FP fix — all tracked in docs/production_readiness_report.md at 55/100. We know exactly what's left and have a plan."
+      },
+      {
+        "q": "Is it production-ready?",
+        "a": "As a research/demo system, yes — it runs and detects. As a public fraud blocker, not yet: 55/100. The blockers are authentication, observability, and the benign false-positive rate. The detection core and the hardening methodology are the genuinely strong parts."
+      }
+    ],
+    "scalability": [
+      {
+        "q": "How does it scale?",
+        "a": "Blue Team V2 handles ~100k nodes in ~22s using sampled centrality, length-bounded cycles, and cut-point pre-filtering. The deploy is capped (150 nodes) for the free tier. The honest caveat: those same optimizations decay detection at very large scale, which is documented. BLING scales horizontally via Postgres/Neo4j/Celery."
+      }
+    ],
+    "impact_and_future": [
+      {
+        "q": "Who is this for?",
+        "a": "Banks and financial-crime teams who need explainable, auditable laundering detection that adapts to adversaries — exemplified by the Union Bank of India BLING integration."
+      },
+      {
+        "q": "What's the roadmap?",
+        "a": "Close B1 with cross-component correlation; wire the provenance/context signals into the live engine to kill the FP rate; add auth + observability; make UB self-host its own venv; black-box/transfer evaluation for the Red Team; and recalibrate every metric on real account-history data."
+      },
+      {
+        "q": "What's the single most impressive thing here?",
+        "a": "The closed adversarial loop with an honest conclusion: we didn't just claim a detector works — we built an attacker that proves where it fails, fixed each failure with a new context signal, and showed the arms race terminates in economics. And UB can explain all of it from the actual source code, locally."
+      }
+    ],
+    "cash_handling": [
+      {
+        "q": "How does TGIE handle cash deposits and withdrawals?",
+        "a": "Cash In and Cash Out are first-class transaction types. A deposit (payment_rail CASH_IN) creates a real CASH_SOURCE node; a withdrawal (CASH_OUT) creates a real CASH_EXIT node. They are connected graph nodes classified as account_type 'cash', so a chain CASH_SOURCE → ACC_1 → … → ACC_n → CASH_EXIT is one connected component. Cash endpoints participate fully in BFS/DFS, connected components, cycle detection, recovery, and analytics (cash_inflows/cash_outflows)."
+      },
+      {
+        "q": "Was there a bug with cash transactions? What was it?",
+        "a": "Yes, and we fixed it root-cause. Datasets using payment_rail CASH_IN / CASH_OUT used to fail: those weren't valid PaymentRail values, so ingestion silently coerced them to UPI (lenient path) or rejected them (strict path). The system originally only understood payment_rail='CASH' with direction inferred from the account name. We made CASH_IN/CASH_OUT valid rails and turned CASH_SOURCE/CASH_EXIT into first-class connected nodes. The fix is covered by backend/tests/test_cash_transactions.py."
+      },
+      {
+        "q": "Do cash nodes break the existing transaction types?",
+        "a": "No — verified by regression. UPI/IMPS/NEFT/RTGS are unaffected, and the legacy payment_rail='CASH' satellite path still works for backward compatibility. So two cash conventions coexist by design: first-class (CASH_IN/CASH_OUT) and legacy satellite (CASH). That coexistence is a known, intentional design seam."
+      },
+      {
+        "q": "What color are cash nodes and why don't they turn red in a fraud?",
+        "a": "Node TYPE owns the fill color and fraud is a non-destructive overlay. CASH_SOURCE is emerald (#00E676, cash entered the network) and CASH_EXIT is gold (#FFC400, cash left it). Even when a cash node is on a fraud path it keeps its identity color — fraud involvement is shown by a pulsing red halo ring instead. This preserves both facts at once: where cash entered/exited AND that it's implicated. Ordinary fraud accounts still fill red."
+      }
+    ],
+    "graph_layout": [
+      {
+        "q": "Why does the 3D graph look organized instead of a tangled blob?",
+        "a": "We replaced random force-seeding with a topology-aware layout (frontend graphLayout.ts). Each connected component's directed structure is analysed and given an intelligent initial 3D placement; the force engine then only refines it. Rings render as circles; everything else as a layered DAG (depth → Y, barycenter sweeps to cut edge crossings). Chains become straight vertical lines, fan-outs cones, fan-ins convergence. Money flows downward consistently so direction is obvious — and it stays fully 3D, rotatable and draggable."
+      },
+      {
+        "q": "Did you change the rendering or interaction to do that?",
+        "a": "No. We changed only the layout algorithm (initial placement + a structural-anchor force so physics refines rather than defines). Node/edge rendering, glow, particles, lighting, zoom, pan, drag, and the investigation logic were left untouched."
+      }
+    ],
+    "adversarial_governance": [
+      {
+        "q": "Does the Red Team automatically train the Blue Team?",
+        "a": "No. The Red Team is the attacker and never directly trains the Blue Team. The Blue Team learns ONLY from investigator-approved cases. Honestly: the live platform was already human-gated — there was no auto-poisoning bug in production; blue_team_v2 is stateless and never mutated at runtime, and the only auto-hardening is an offline CLI research loop not wired into the running app."
+      },
+      {
+        "q": "What happens when the Blue Team detects vs misses an attack?",
+        "a": "If Blue DETECTS it, the case is not used for training — instead it signals the Red Team to evolve a harder variant. If Blue MISSES a real on-graph evasion, the case enters a Training Queue for investigator review. Only the explicit 'Learn from this Case' decision adds it to the Blue Knowledge Base; reject/ignore/archive discard it."
+      },
+      {
+        "q": "How do you prevent training-data poisoning or model drift?",
+        "a": "A governance layer (backend/adversarial_governance/store.py) sits between Red and Blue: a Training Queue (only Blue misses enter), an immutable audit trail (every decision with who/when/outcome), and dedup (a pattern whose signature is already known MERGES instead of duplicating). Nothing reaches the Blue Knowledge Base without an investigator's explicit approval. The investigator is the authority — that's the human-in-the-loop principle."
+      },
+      {
+        "q": "Where do investigators review this?",
+        "a": "A localhost-only Training Review panel (TrainingReviewPanel.tsx) shows each pending missed case with its Pattern ID, timestamp, detection status, Red/Blue confidence, fraud type, risk score, and why Blue missed it, plus actions Learn / Ignore / Review First / Reject / Archive / Review Graph / Compare Similar, and a full audit-trail tab. Covered by backend/tests/test_training_governance.py."
+      }
+    ],
+    "honesty_and_limits": [
+      {
+        "q": "What are the biggest limitations I should know?",
+        "a": "Production readiness is ~55/100 — TGIE is an advanced research prototype, not a deployed bank system. Native V2 false positives on realistic benign traffic are ~56.7%; the 0% FP / 0% attack-success hardened results rely on SYNTHETIC context registries and aren't production-validated. 'Strict' on-graph attack success is 0% — most adversarial wins are partition-dependent (the B1 component-isolation blind spot). The V1 GNN is effectively untrained and the IsolationForest has a label-leak. We measured all of this ourselves rather than hiding it."
+      },
+      {
+        "q": "What exactly is your false-positive rate? The numbers seem to differ.",
+        "a": "There are two benign corpora — don't conflate them. On a SIMPLE benign corpus (trivial low-value noise) native V2's false-positive rate is ~11–15%. On a REALISTIC benign corpus (legitimate payroll, high-value corporate payments, merchant fan-in, household traffic) native V2 is 56.7% — it over-flags structured legitimate activity (payroll ~100%, corporate ~85%). The headline, honest number is the realistic 56.7%; the 11–15% was an optimistic artifact of the clean corpus. The provenance/context signals drive BOTH toward ~0% in the prototype, but that rests on synthetic registries and is not production-validated."
+      },
+      {
+        "q": "Why should I trust a system with a 56.7% false-positive rate?",
+        "a": "Because we MEASURED it ourselves on realistic legitimate traffic and fixed it — the provenance signal drives it toward ~0% in the prototype (legit big money flows between verified customers; fresh mules can't verify). We're transparent that this fix isn't production-validated yet. A vendor hiding their FP rate is the real risk; trust the methodology (adversarial testing + honest measurement) and treat the production numbers as pending real-data calibration."
+      },
+      {
+        "q": "Is the recent work committed and verified?",
+        "a": "It's verified — backend tests pass (cash + governance), frontend typechecks clean, and the flows were checked live. It is not necessarily committed to git: the canonical tree at ~/Desktop/TGIE is the working copy. Treat git state as separate from functional state."
+      }
+    ],
+    "detection_internals": [
+      {
+        "q": "How does Blue Team V2 actually score a node?",
+        "a": "V2 is deterministic. It computes per-node graph metrics, runs 11 detectors over each connected component (each emitting explainable evidence), feeds an 18-factor per-node score, and aggregates to a cluster risk. The verdict is a threshold over that cluster risk: LOG 0.38 / REVIEW 0.62 / HIGH_RISK 0.83. No black-box — every flag traces to evidence and a path."
+      },
+      {
+        "q": "What are the 11 detectors?",
+        "a": "layering, smurfing, mule_accounts, fan_in, fan_out, velocity, cashout, circular_flow, bridge_accounts, dormant_accounts, and synthetic_networks. Each looks for a specific laundering structure and produces evidence that contributes to the score. For example a circular A→B→C→D→A flow returns FRAUD ~0.97 via circular_flow."
+      },
+      {
+        "q": "Why deterministic detectors instead of a neural network?",
+        "a": "In finance you must DEFEND a flag in an audit. Deterministic graph detectors give traceable evidence and exact, reproducible verdicts; a black-box score does not. We do use ML in V1 (IsolationForest/XGBoost/GNN) but V2 — the stronger engine on our benchmark — is deterministic, and the LLM (UB) is only the explanation layer, never the detector."
+      },
+      {
+        "q": "How is risk a 'cluster verdict' and not just per-node?",
+        "a": "Laundering is a network property, so V2 scores each connected component and takes the worst/aggregated component risk as the operation verdict. That's also its core weakness (B1): it treats each component in ISOLATION, so an attacker who fragments one ring into many benign-looking components evades it — which is exactly what our Red Team exploits."
+      },
+      {
+        "q": "What makes the verdict 'bimodal' or detector-gated?",
+        "a": "Role-based base risk caps around 0.34 and topology is only a tie-breaker, so a node with NO detector firing and no origin tops out near 0.42 (LOG). In practice, evading the 11 detectors ≈ evading all of V2. That's why our attacks target the detector gates directly, and why the gate constants (amounts, hop counts, fan degrees) being fixed lets evasion margins be computed in closed form."
+      }
+    ],
+    "context_signals": [
+      {
+        "q": "What are the context signals that harden the Blue Team?",
+        "a": "Five orthogonal signals layered on V2, each forced by a specific Red Team probe: provenance (KYC identity — is the value flowing through verified accounts?), behavioural (does an account exceed ITS OWN throughput baseline?), coordination (a hub-less, consumer-heavy, fragmented crowd at the operation level), relationship (value between accounts with no shared counterparty history), and relationship-maturity (history weighted by depth × age). Together they take the full adversary to 0% success at 0% FP on construction-honest corpora."
+      },
+      {
+        "q": "Why is provenance the most important signal?",
+        "a": "It fixed BOTH error rates at once: on the realistic benign corpus it drove the 56.7% false-positive rate toward ~0% (legit big money flows between verified customers) AND held fraud detection, because fresh mule accounts can't be verified. It's orthogonal to graph shape, so fragmenting the graph (B1) doesn't help — each fragment of unverified value still floors to FRAUD. Its honest limit: it proves identity, not behaviour — a seized verified account (account-takeover) defeats it, which is why the behavioural signal exists."
+      },
+      {
+        "q": "How does the arms race end?",
+        "a": "In ECONOMICS, not a perfect detector. The final signal (relationship-maturity) charges each pair's flow against the genuine history that pair has actually built. To evade it the attacker must pre-move legitimate value PROPORTIONAL to the laundering, a year in advance — self-defeating (our run showed ~12,839× the laundered value over a year). Each earlier signal raised attacker COST; maturity makes the cost prohibitive."
+      },
+      {
+        "q": "What is the single root cause behind every Blue Team failure?",
+        "a": "V2 scores a CONTEXT-FREE SNAPSHOT of an isolated component. Every effective defence we found injects context the snapshot lacks — identity, behaviour, linkage, relationship history, temporal depth. So the highest-value architectural investment isn't better structural detectors, it's MEMORY/context. The original B1 'component isolation' blind spot is one facet of that."
+      }
+    ],
+    "adversarial_methods": [
+      {
+        "q": "How does the Red Team actually generate attacks?",
+        "a": "Several methods over the REAL detection engine: a warm-started genetic algorithm (genome = sequence of attack 'moves'), MAP-Elites quality-diversity (descriptors = fragmentation × distortion; finds 12 distinct evading families vs the GA's 5, killing mode collapse), a PPO reinforcement-learning agent (sequential one-edit-at-a-time MDP), and a GraphGAN surrogate (a NumPy model distilled from V2 to give PPO a fast, differentiable-ish reward). All pure-NumPy — the deployment is torch-free."
+      },
+      {
+        "q": "Doesn't a static surrogate just get gamed (Goodhart)?",
+        "a": "Yes, and we observed exactly that: PPO against a STATIC surrogate hit high proxy reward but 0% true success — it exploited proxy-vs-real disagreement. The fix is the GAN loop: re-distill the surrogate on the generator's on-policy attacks labelled by the real V2 each round. On-policy agreement then climbs .56→.91 and true success starts rising — the equilibrium closes the gap. We report this honestly rather than quoting the gamed number."
+      },
+      {
+        "q": "What's the difference between permissive and strict attack success?",
+        "a": "Permissive ASR (~0.44–0.67) counts an evasion even if it relies on off-graph completion. Strict on-graph ASR requires a connected source→sink path and is 0.0 — EVERY winning attack is partition-dependent (it fragments the operation). We separated these metrics deliberately: the old 66.7% conflated a real blind spot (B1) with a permissive objective granting free credit."
+      },
+      {
+        "q": "Why build attack tooling at all — isn't it risky?",
+        "a": "It's a defensive research harness: it attacks OUR OWN detector on synthetic data, under an isolation contract, to discover and close weaknesses. Crucially it's human-in-the-loop — the Blue Team only ever trains on Blue-MISSED evasions an investigator approves, never on raw Red output. The whole point is to make the defender stronger, with full auditability."
+      }
+    ],
+    "hostile_cross_exam": [
+      {
+        "q": "Isn't this just a graph visualization with a fraud label slapped on?",
+        "a": "No. The graph is the substrate; the value is the deterministic 11-detector engine with auditable evidence, the closed adversarial loop that proves where it fails and supplies the missing context signals, and UB explaining it all locally. We also measured our own false-positive rate (56.7%) and fixed it with provenance — that's detection science, not a viz."
+      },
+      {
+        "q": "How do I know your results aren't overfit to your own synthetic data?",
+        "a": "We're candid that this is the central risk and partly unresolved: attacks were evolved against fixed graphs at limited seeds, and transfer/black-box evaluation is on the roadmap, not done. We did add reproducibility (deterministic blake2b seeding), expectation evaluation over multiple realizations with a success quorum, and strict on-graph metrics — but every quoted 0% FP rests on construction-honest synthetic corpora and needs recalibration on real account history."
+      },
+      {
+        "q": "What in this demo is real vs faked?",
+        "a": "Real: the deterministic V2 engine and its evidence; the graph build/traversal/analytics; the cash pipeline; the adversarial GA/QD/PPO/GraphGAN running against the actual engine; UB's local RAG over real source. Synthetic/illustrative: the benign and KYC/behaviour/relationship registries (so FP numbers are construction-honest, not production-measured); the V1 GNN is effectively untrained (random weights). We never claim production validation."
+      },
+      {
+        "q": "Why a local LLM instead of GPT-4 / a cloud model?",
+        "a": "Banking data can't leave the building, and we want zero data egress and no per-query cost or dependency. UB runs llama3.1:8b locally via Ollama with RAG over the codebase, so it's private, offline-capable, and always reflects the current code via re-indexing. The trade-off is a smaller model, which RAG grounding compensates for."
+      },
+      {
+        "q": "If the false-positive rate was 56.7%, why should I trust this?",
+        "a": "Because we MEASURED it ourselves and fixed it — provenance/context signals drive it toward 0% in the prototype — and we're transparent that the fix isn't production-validated yet. A vendor hiding their FP rate is the real risk; we surface ours with a plan. Trust the methodology (adversarial + honest measurement), and hold the production numbers as pending real-data calibration."
+      },
+      {
+        "q": "Can't an attacker just read your fixed thresholds and evade them?",
+        "a": "Yes — that's precisely what our Red Team does, and why threshold-tuning was proven the WRONG lever (it only reduces evasion by over-flagging benign traffic). The durable defences aren't secret constants; they're context signals (identity, behaviour, relationship history, temporal depth) that raise the attacker's real-world COST — e.g. having to seize verified accounts or pre-build a year of genuine history."
+      }
+    ],
+    "comparisons_and_ops": [
+      {
+        "q": "V1 vs V2 — which Blue Team and why?",
+        "a": "V2 is primary: deterministic graph engine, explainable, beats V1 on benchmark (graph-F1 ~0.96 vs ~0.76) and is much faster. V1 (IsolationForest + XGBoost + GNN + rules) is secondary/streaming-oriented and has known issues (untrained GNN, IsolationForest label leak 'B5', XGBoost overfit to its own generator). Selected via the ACTIVE_BLUE_TEAM env in blue_team_v2/router.py."
+      },
+      {
+        "q": "First-class cash nodes vs the legacy 'CASH' satellite — what's the difference?",
+        "a": "First-class (payment_rail CASH_IN/CASH_OUT) creates real connected CASH_SOURCE/CASH_EXIT graph nodes that participate in traversal, components, recovery, and analytics. The legacy payment_rail='CASH' path attaches cash as off-graph metadata on the parent account (a visual satellite), so it does NOT give full connectivity. Both coexist intentionally for backward compatibility; new data should use CASH_IN/CASH_OUT."
+      },
+      {
+        "q": "How do I run TGIE locally?",
+        "a": "Use the control suite: control/start_tgie.command launches, in order, Ollama (:11434), UB (:8001), the backend (:8000), and the frontend (:3000); stop_tgie.command shuts it down. Nothing auto-starts. The Red Team and Training Review panels are localhost-only and gated by ENABLE_REDTEAM_PANEL on the backend. UB's index is (re)built with `python -m ub index`."
+      },
+      {
+        "q": "How does UB stay accurate when the code changes?",
+        "a": "Re-indexing. `python -m ub index` regenerates the project/architecture summaries and re-embeds every chunk locally, and the curated judge_questions bank grounds known cross-questions as authoritative answers. No fine-tuning, so there's no stale-weights problem — UB reflects whatever is in the canonical tree at index time."
+      }
+    ],
+    "model_and_hardware": [
+      {
+        "q": "Which model does UB run and why that one?",
+        "a": "Primary brain is llama3.1:8b via local Ollama, with llama3.2:3b as a fast fallback. The requested preference order was llama3.3 → llama3.1 → qwen3 → mistral → gemma; llama3.3 (70B, ~40GB) can't fit 16GB, so llama3.1:8b — the next that fits (~5GB) — was selected. Benchmarked on the target machine (Apple M5, 16GB): llama3.1:8b ~19.9 tok/s with High TGIE-Q&A quality; llama3.2:3b ~46.9 tok/s, lighter. You can hot-swap with POST /ub/model."
+      },
+      {
+        "q": "What embeddings and index size?",
+        "a": "Embeddings are nomic-embed-text (768-dim), fast enough to index the whole workspace in a few minutes and embed a query in tens of milliseconds. The current index is ~842 files / ~4,300 chunks, stored as a NumPy vector store (vectors.npy + chunks.jsonl + meta.json). Retrieval is cosine similarity; top-k chunks are injected into the prompt."
+      },
+      {
+        "q": "Is UB fast enough to be interactive?",
+        "a": "Yes — llama3.1:8b runs ~20 tok/s on the M5/16GB (3.68s on the benchmark prompt), which is fine for an assistant, and the 3.2:3b fallback is ~2.4× faster (~47 tok/s) for quick lookups or when memory is tight. Embedding a query is tens of milliseconds. A cold model adds a one-time ~1–3s load."
+      }
+    ],
+    "readiness_scorecard": [
+      {
+        "q": "What is the production readiness score and how is it derived?",
+        "a": "Composite 55/100 — 'advanced prototype / pre-production.' Weighted: Security 55 (20%), Reliability 65 (15%), Maintainability 55 (15%), Scalability 60 (15%), Performance 70 (10%), Observability 35 (10%), Testing 50 (15%). The math: 0.20·55 + 0.15·65 + 0.15·55 + 0.15·60 + 0.10·70 + 0.10·35 + 0.15·50 ≈ 55. Strong research core and a real deployment, but security/observability/testing gaps block production."
+      },
+      {
+        "q": "What are the critical must-fix issues before production?",
+        "a": "Five: (1) no authN/authZ on the public WebSocket (/ws/live) and POST /transaction/manual; (2) a static shared secret committed in env docs — rotate into a secret manager; (3) the 56.7% benign false-positive rate until provenance/context signals are wired into the live engine; (4) B5 label leakage in V1's IsolationForest (reads ground truth) — invalidates V1 metrics; (5) no observability beyond /health — a fraud system needs metrics, alerting, and audit logging."
+      },
+      {
+        "q": "Why is observability the lowest score (35)?",
+        "a": "Today there's only a /health endpoint and logs — no metrics, tracing, dashboards, or alerting on verdict-rate anomalies. For a fraud-detection system that's a real gap: you need to detect when the detector itself drifts or goes silent (we also note swallowed detector exceptions cause silent gaps). It's on the roadmap and honestly scored low rather than glossed over."
+      },
+      {
+        "q": "Where IS it deployable today and where not?",
+        "a": "As a research/demo system it runs and detects (deployed on Railway/Vercel, demo-mode fallback). As a public fraud BLOCKER, not yet — the blockers are authentication, observability, and the benign false-positive rate. The genuinely strong parts are the deterministic detection core and the adversarial hardening methodology."
+      }
+    ],
+    "subsystems": [
+      {
+        "q": "What does the Recovery Engine do?",
+        "a": "It answers 'can we still recover the money?' Exposed under /api/recovery (e.g. POST /api/recovery/analyze), it scores recovery probability from multiple 0–100 factors (higher = better), applies rational age-decay (the longer since the transfer, the lower the odds), models a recovery funnel, ranks concrete actions, and includes a simulator. UB can narrate the deciding factors. First-class cash endpoints are visible to it, so cash-out exposure is part of the picture."
+      },
+      {
+        "q": "What is BELS?",
+        "a": "The Blockchain Evidence Ledger System. It anchors each piece of evidence by its SHA-256 hash plus timestamp, case/evidence IDs, a metadata digest, signatures, and a chain-of-custody record — the raw files stay OFF-chain. The blockchain layer is abstracted behind a BlockchainProvider interface; the bundled default is an internal proof-of-work hash-chain (BELS_PROVIDER env), so it can later migrate to a bank/RBI chain without changing the evidence API."
+      },
+      {
+        "q": "How does authentication / the investigator login work?",
+        "a": "Banking-grade investigator auth under /api/auth: POST /api/auth/login issues access + refresh JWTs, /api/auth/me returns the current investigator, refresh mints new access tokens, and there's role-based access (RBAC). It also powers /api/investigator/profile and an activity/audit log, plus global account search and account dossiers under /api/accounts. It's demo-friendly (tokens survive reloads) but not yet hardened for production (see the security score)."
+      },
+      {
+        "q": "What is case management?",
+        "a": "Investigator cases with a full lifecycle: title/category/status/priority, timeline events, evidence (hashed, BELS-anchored), notes, assignment, and risk history — JSON-persisted (backend/case_management). On first run it auto-seeds cases from the highest-risk accounts in the registry, mirroring a real 'detection → case' workflow."
+      }
+    ],
+    "hostile_rapid_fire": [
+      {
+        "q": "Your accuracy numbers — are any of them invalid?",
+        "a": "Yes, and we say so: any V1 accuracy is invalid because of B5 label leakage (the IsolationForest reads ground-truth fraud_pattern). That's why V2 — deterministic, no leak — is the primary engine and the one we benchmark. We'd rather flag the invalid metric than quote it."
+      },
+      {
+        "q": "Isn't 0% attack success just because your detector over-flags everything?",
+        "a": "That was true for the WRONG lever (threshold tightening drove evasion to 0 only by raising benign FP to ~63%). The provenance/context signals are different: they drive attack success to 0 AT 0% benign FP because they add orthogonal context (verified identity, own-baseline behaviour, relationship history), not by flagging more. We measured both and kept the honest one."
+      },
+      {
+        "q": "What's the weakest part of the whole system?",
+        "a": "Two things: the 56.7% native false-positive rate on realistic benign traffic (fixed in prototype, not production-validated), and that every hardened 0% FP result rests on SYNTHETIC context registries — real KYC/behaviour/relationship data would shift the numbers. Plus observability is near-absent. The detection methodology is strong; the production hardening and real-data calibration are not done."
+      },
+      {
+        "q": "Why should a bank pick this over an existing AML vendor?",
+        "a": "Three differentiators: it's explainable (deterministic evidence you can defend in an audit, not a black-box score); it's adversarially hardened (a Red Team continuously proves where it fails and each failure is closed by a context signal — we showed the arms race ends in economics); and it's fully local/private with UB able to explain the entire system from source. Honest caveat: it's a prototype at 55/100, not a drop-in replacement yet."
+      },
+      {
+        "q": "If I fragment my laundering into tiny pieces, don't you miss it?",
+        "a": "Per-component scoring (V2 alone) does — that's the B1 blind spot, and our conduit-split mesh exploits it. But the coordination signal scores at the OPERATION level (a hub-less, consumer-heavy, fragmented crowd) and the relationship signal floors value between accounts with no shared history, so the composed stack catches the mesh. The honest limit: coordination needs cross-session LINKAGE evidence, which in production is itself errorful."
+      },
+      {
+        "q": "Did you just hardcode the demo answers?",
+        "a": "No. UB answers any question dynamically via RAG over the real codebase; the curated judge_questions bank only GROUNDS known questions with vetted facts (and is honest about limits). Unlisted questions are answered from retrieved code/doc chunks with file-path citations. You can ask it something off-script and check the sources it cites."
+      }
+    ],
+    "audit_deepdive": [
+      {
+        "q": "How many Blue Team implementations are there?",
+        "a": "Three. V1 (backend/blue_team) — ML/statistical (IsolationForest + XGBoost + GraphSAGE/GAE + rules), streaming-oriented, the historical production default. V2 (backend/blue_team_v2) — the deterministic graph engine (18-factor NodeMetrics → 11 detectors → evidence → scoring → cluster verdict), now the primary engine. And BLING — a heavyweight Union Bank forensic service (FastAPI + Postgres + Neo4j + Redis/Celery, forensic PDF evidence). The engine is selected via the ACTIVE_BLUE_TEAM env, with a shadow mode that runs both."
+      },
+      {
+        "q": "What are V2's top scoring weights, and why does it matter?",
+        "a": "pattern_participation 0.22, fraud_proximity 0.15, velocity 0.12 — and volume only 0.06. That volume UNDER-weighting is a real exploit surface: laundering must deliver value to sinks, so every evasion has a high-volume tell, but V2 barely weights it. Our learned calibration found volume as the top discriminator (+1.55) precisely because V2 demotes it. It's a concrete example of the Red Team revealing a scoring blind spot."
+      },
+      {
+        "q": "What Red Team capabilities exist beyond the main one?",
+        "a": "Three. The adversarial program (red_team/adversarial) is primary — the Red⇄Blue self-play research system (GA, MAP-Elites, PPO, GraphGAN, 11 agents). red_team/engine is an in-repo isolated red team with curated scenario datasets (multi-stage laundering, mule network, hybrid, account-takeover burst) under a hard import-time isolation contract. And CRUCIBLE (Union Bank) continuously evolves synthetic fraud 'genomes' nightly, keeps detection-evading ones, and routes them to HUMAN reviewers (human_gate) — learning when a predicted pattern later appears in real fraud (prophecy/learning)."
+      },
+      {
+        "q": "How effective is the account-takeover attack specifically?",
+        "a": "Against a provenance-hardened Blue Team, attack success goes 0 → 0.89 with 8 seized verified accounts → 1.0 with ~24. The mechanism: seizing real KYC-verified accounts collapses provenance's value-weighted unverified ratio (1.0 → 0.0), so provenance-adjusted risk drops to ~0.25 (LOGGED). It's cheap because value-weighting means the attacker only needs the few high-value consolidation accounts — which is exactly why the behavioural signal (own-baseline) was added on top."
+      },
+      {
+        "q": "What attacks have you NOT done — be honest about coverage gaps.",
+        "a": "Several, and we track them openly: black-box / transfer evaluation is not done (the Red Team is white-box only; transfer was never measured); V1 as a target is secondary and still open (V2 is the primary target); and embedding attacks on the GNN are pointless because the GNN is untrained (B4). The heavy agents (volume_dilution, profile_mimicry) build huge graphs and are slow without a surrogate world-model. So the impressive results are real but bounded to white-box V2 on synthetic graphs."
+      },
+      {
+        "q": "Why did the 3D graph look like a rhombus, and is it fixed?",
+        "a": "Root cause was a WebGL drawing-buffer ↔ CSS-box aspect-ratio mismatch: react-force-graph-3d sized the drawing buffer from window.innerWidth/Height while CSS stretched the canvas to the actual container box, so on rotate/resize the buffer aspect ≠ the displayed aspect and the scene skewed. It's fixed: GraphScene now measures the real container via ResizeObserver and keeps the camera aspect + drawing buffer locked to that box (with a devicePixelRatio clamp). The layout engine work also made the graph read clearly regardless."
+      },
+      {
+        "q": "Does the BLING / Union Bank red team also use human review?",
+        "a": "Yes — CRUCIBLE has a dedicated human_gate: it generates thousands of synthetic fraud-genome variants nightly, keeps the detection-evading ones, and routes them to human reviewers before anything is trusted. That's the same human-in-the-loop principle as TGIE's Training Queue: machine generation proposes, humans approve. It also has a 'prophecy/learning' loop that validates when a predicted pattern later shows up in real fraud."
+      }
+    ],
+    "hardware_and_local": [
+      {
+        "q": "What hardware does this run on, and why does it matter?",
+        "a": "A MacBook Air (Mac17,3): Apple M5, 10 CPU cores (4 performance + 6 efficiency), 8 GPU cores (Metal 4), 16GB unified memory, ~331GB free, macOS 26.4. It matters because Apple Silicon uses UNIFIED memory — GPU/Neural Engine share the same 16GB as the CPU — so the practical LLM limit is 'weights + KV cache + everything macOS is doing' inside 16GB. That's why llama3.3 (70B, ~40GB) is excluded and llama3.1:8b (~4.9GB Q4) is the brain, with headroom."
+      },
+      {
+        "q": "Why not just use a bigger local model for more accuracy?",
+        "a": "Memory. On 16GB unified memory, 7–9B models (llama3.1:8b ~4.9GB, qwen/mistral ~4–5GB, gemma2:9b ~5.5GB) fit; a 70B needs ~48GB+. llama3.1:8b is the best quality/size balance on this Mac and RAG grounding (plus the vetted answer bank) compensates for the smaller model. You can hot-swap to the 3B fallback for speed via POST /ub/model."
+      },
+      {
+        "q": "Is everything really local — no cloud?",
+        "a": "Yes. Ollama runs the model on the Mac's GPU via Metal; embeddings (nomic-embed-text) and the NumPy vector index are built from the local workspace only; the detection engine is local Python. Nothing leaves the machine — designed for offline, on-device operation, which is the point for banking data."
+      }
+    ],
+    "system_data_flow": [
+      {
+        "q": "Walk me through what happens when a transaction is submitted.",
+        "a": "The frontend (or a dataset) POSTs to /transaction/manual on the FastAPI backend (:8000). The backend processes each transaction sequentially: the graph_engine (NetworkX GraphManager) adds nodes/edges, anomaly_detection + the Blue Team router (V1 or V2 by ACTIVE_BLUE_TEAM) score the affected components, and the result is broadcast over WebSocket (/ws/live) to the originating session. The frontend's GraphScene lays the update out in 3D and the risk-intel layer colors it; UB can explain any of it on demand."
+      },
+      {
+        "q": "How does the frontend talk to the backend?",
+        "a": "Two channels: POST /transaction/manual to submit, and a WebSocket /ws/live for streamed graph updates (so the graph animates as transactions process). In dev, Vite (:3000) proxies /api and /ub to the backend (:8000). The frontend layers are GraphScene (3D force graph), the risk-intel layer (ai/riskPropagation.ts), and the UB voice assistant (wake word + intents like show/hide intel)."
+      },
+      {
+        "q": "What's the end-to-end UB pipeline?",
+        "a": "Frontend/CLI → FastAPI /ub/* (backend/ub_service) → UBBrain (ai_core) → Knowledge Engine (retrieve top-k chunks) → NumPy VectorStore → Ollama → llama3.1:8b → grounded answer + source citations. The system prompt is persona (mode) + project summaries + retrieved chunks + matched vetted answers + recent history. Pure stdlib + NumPy, no heavy deps."
+      }
+    ],
+    "workspace_and_frontend": [
+      {
+        "q": "How was the TGIE workspace assembled?",
+        "a": "It's a clean-copy consolidation of four source repos into one ~/Desktop/TGIE tree (2026-06-24): the core engine + frontend + UB from transaction-graph-intelligence (branch production); the in-repo isolated red team → red_team/engine; the adversarial self-play program → red_team/adversarial; BLING Blue Team → blue_team/bling and bling-v2; CRUCIBLE → red_team/crucible. Import policy was additive and clean — node_modules/.venv/.git/caches excluded, originals left untouched."
+      },
+      {
+        "q": "What's the frontend design intent?",
+        "a": "A matte-black institutional trading terminal — graph-first, minimal clutter. Pure #000000 background, monospace labels, a restrained green/amber/red verdict palette. The header and RightPanel were removed, scenario buttons replaced by a single unified sim feed (data/sampleDataset.ts), and the UB orb is call-driven (appears only when invoked). The graph fills the viewport."
+      },
+      {
+        "q": "What are the known frontend issues?",
+        "a": "Honestly: GraphScene.tsx is a ~1,287-line monolith (force config, camera, renderer, cluster force, overlays, events) that's hard to test; devicePixelRatio isn't fully managed so text can look soft on Retina; there's some dead JSX and an orphaned RightPanel.tsx; there are no frontend tests (correctness is verified manually); and mic-grant / TTS autoplay can be brittle on non-Chromium or LAN-IP/HTTP origins. The rhombus/aspect resize bug was the most serious and is now fixed (ResizeObserver)."
+      }
+    ],
+    "operations_control": [
+      {
+        "q": "How do you start and stop TGIE?",
+        "a": "It's a manually-controlled suite — nothing starts at boot or login. From TGIE/control/ there are four double-click scripts: start_tgie.command (starts everything in order, gates each on a health check, opens the browser), stop_tgie.command (stops in reverse order, sweeps orphans, verifies shutdown), status_tgie.command (per-component running/stopped, port, PID, memory), and restart_tgie.command. Each writes a PID file under control/pids/."
+      },
+      {
+        "q": "What runs on which port?",
+        "a": "Four independent components on independent ports: Ollama on 11434 (ollama serve), UB on 8001 (python -m ub_service), the TGIE backend on 8000 (uvicorn main:app), and the frontend on 3000 (Vite npm run dev). Startup is strictly ordered with health gates: Ollama (:11434/api/version) → UB (:8001/ub/health) → backend (:8000/health) → frontend (:3000)."
+      },
+      {
+        "q": "Why does UB run as its own service on :8001?",
+        "a": "So it can be started/stopped independently of the core backend. The frontend's voice orb reaches it through Vite's /ub proxy (→ :8001). If you'd rather embed UB inside the backend process, start the backend with TGIE_MOUNT_UB=1 — but the control suite keeps them separate by design (cleaner lifecycle, UB can be reloaded without bouncing detection)."
+      },
+      {
+        "q": "Does anything start automatically at boot?",
+        "a": "By design, no — TGIE is fully manual. An audit of every macOS auto-start surface (launchctl, LaunchAgents/Daemons, crontab, Login Items) found exactly one TGIE-adjacent item: com.ollama.ollama, which Ollama.app registered as a login background item via Apple's SMAppService (runatload). It was decoupled so Ollama only runs when the control suite starts it; the manually-started ~/.local/bin/ollama serve is separate from that launchd job."
+      },
+      {
+        "q": "What if UB won't start or is unhealthy?",
+        "a": "UB depends on Ollama being up AND a built knowledge index. If /ub/health is red, check: (1) Ollama is running on :11434 and the models llama3.1:8b + nomic-embed-text are pulled; (2) the index exists — build it with `python -m ub index` from the TGIE root; (3) you're using the venv interpreter that has numpy/fastapi (the local Python 3.14 can't build scipy). The start script warns explicitly if the models aren't pulled."
+      },
+      {
+        "q": "How do you rebuild UB's knowledge after changing the project?",
+        "a": "Run `python -m ub index` from the TGIE root — it regenerates the project/architecture summaries and re-embeds every chunk locally (a few minutes). For curated-answer changes only (judge_questions.json), just restart the UB service — the brain loads that bank at init, so no full reindex is needed. There's also a watcher (ub/scripts/watch.sh) and POST /ub/reindex."
+      }
+    ],
+    "banking_products": [
+      {
+        "q": "What Union Bank products and channels does TGIE understand?",
+        "a": "TGIE reasons about transactions across Union Bank's products and channels — Savings, Current, Loan and Credit Card accounts; the UPI, IMPS, NEFT, RTGS and SWIFT rails; and ATM, Cash, POS, QR, Wallet, Merchant, Branch, Internet and Mobile Banking touchpoints. In the engine each transaction carries its payment rail, so the graph preserves how money actually moved, not just that it moved."
+      },
+      {
+        "q": "Do you support UPI, IMPS, NEFT and RTGS?",
+        "a": "Yes — payment rail is a first-class attribute on every transaction (PaymentRail in the transaction model: UPI, IMPS, NEFT, RTGS, plus CASH, CASH_IN and CASH_OUT). The risk engine treats the use of multiple distinct rails in one cluster as a layering signal, because real laundering hops between rails to break the trail."
+      },
+      {
+        "q": "How does TGIE handle cash and ATM withdrawals?",
+        "a": "Cash entry and exit are first-class nodes in the graph. A CASH_IN creates an emerald CASH_SOURCE node and a CASH_OUT creates a gold CASH_EXIT node, both fully connected, so a chain like cash-in to mule accounts to cash-out reads as one component and participates in every traversal, cycle check and recovery estimate. Cash-out is treated as the hardest point to recover from."
+      },
+      {
+        "q": "What about credit cards, wallets and merchant or POS transactions?",
+        "a": "They are modelled as accounts and rails on the same graph, so a card or wallet cash-out, or a merchant/POS leg, sits in the same money trail as the bank transfers around it. The platform is product-agnostic by design — the graph does not care which product an edge belongs to, which is exactly what lets it follow fraud across them."
+      }
+    ],
+    "cross_product_fraud": [
+      {
+        "q": "What is cross-product fraud and how does TGIE detect it?",
+        "a": "Cross-product fraud is laundering that deliberately moves funds across different products and channels to break the trail — for example UPI mule inflows, aggregated in a current account, layered out over RTGS, then taken out at an ATM or card. Row-level, per-product monitoring misses it because no single product sees the whole path. TGIE builds every product's transactions into one graph, so the full path is a single connected component the Blue Team can score end to end."
+      },
+      {
+        "q": "Why can't a normal per-product fraud system catch this?",
+        "a": "Traditional systems monitor each product or account in isolation, so a flow split across UPI, a current account and RTGS looks like small, unrelated, individually harmless events. TGIE's unit of analysis is the connected component across all products, so the aggregation, the layering and the cash-out are seen as one operation with one risk score and one explanation."
+      }
+    ],
+    "why_graph_and_comparisons": [
+      {
+        "q": "Why graphs instead of SQL tables?",
+        "a": "Money laundering hides in the relationships between accounts, not in any single row. Expressing 'find a 5-hop layering chain that ends in a cash-out and loops back' in SQL means many self-joins that are slow and unreadable; on a graph it is a direct traversal. TGIE's unit of analysis is the connected component, so the fraud structure — chains, fans, rings, mule meshes — is first-class, not reconstructed after the fact."
+      },
+      {
+        "q": "Why not just use Neo4j?",
+        "a": "We do plan Neo4j as the persistent banking knowledge graph — the driver is already a dependency for that phase. The live demonstration hot path uses an in-memory NetworkX graph per session for real-time speed and zero setup. The design separates the in-memory projection from the durable graph store precisely so production can move to Neo4j without changing the detection logic."
+      },
+      {
+        "q": "Why Ollama and a local model instead of a cloud LLM?",
+        "a": "Because this is a bank. The AI layer runs fully on-premise with Ollama (a local llama 3.1 model) so no customer or transaction data ever leaves the building — no cloud calls, no data egress. It also means predictable cost and that the assistant works in an air-gapped environment. The trade-off is a smaller model, which we offset by grounding every answer in the project's own knowledge."
+      },
+      {
+        "q": "How does this compare with existing AML solutions like Actimize or SAS?",
+        "a": "Established AML platforms are strong at rule-based, per-account transaction monitoring and regulatory reporting. TGIE is complementary and graph-native: its unit of analysis is the relationship structure across products, every alert is explainable down to the contributing factors and the money path, and an adversarial Red Team keeps detection current. It is an advanced prototype, not a certified replacement for a production AML suite today."
+      },
+      {
+        "q": "How will this integrate with the Core Banking System (CBS)?",
+        "a": "CBS integration is on the roadmap, not yet implemented in this prototype. The architecture is built for it: transactions enter through a defined ingestion API and the heavy branch includes a streaming path (Kafka and Flink) intended to consume a CBS event feed. Today the demonstration is driven by a transaction simulator and manual submission, so a live CBS connector would be the next integration step."
+      }
+    ],
+    "accuracy_and_scale": [
+      {
+        "q": "How will this work on millions of transactions?",
+        "a": "The current prototype analyses a session's graph in memory, which is right for a live demonstration but not yet proven at bank scale. The path to scale is the designed one: persist the graph in Neo4j, ingest through the streaming layer, and score connected components incrementally rather than rebuilding. Production-scale throughput is a roadmap item, and I would not claim a benchmark we have not run."
+      },
+      {
+        "q": "What about false positives and false negatives?",
+        "a": "We measure both honestly. The native deterministic detector over-flags some legitimate corporate and payroll activity; a set of context signals (identity, behaviour, coordination, relationship history) was added specifically to bring that false-positive rate down without losing true fraud. Those signals currently rely on synthetic registries, so the headline numbers are construction-honest, not yet validated on real Union Bank history."
+      },
+      {
+        "q": "How accurate is the system, really?",
+        "a": "Detection is deterministic and reproducible — the same data always yields the same verdict and the same evidence, which is what an auditor needs. We do not quote a single accuracy figure as if it were production-validated, because the benign and identity datasets are still synthetic. Overall this is an advanced prototype; the honest readiness is roughly 55 out of 100, and the numbers must be recalibrated on real account history before deployment."
+      }
+    ],
+    "recovery_detail": [
+      {
+        "q": "How does the Recovery engine work — freeze, hold, notify and prioritise?",
+        "a": "Recovery answers 'can we still get the money back, and how?'. It scores each case on factors such as how many hops the funds have travelled, time elapsed (an age-decay curve), how dispersed the money is, and how close it is to a cash-out, then ranks concrete actions — freeze the accounts still holding traceable funds, place holds, notify the relevant parties, and prioritise the cases where recovery is still feasible. Every score is bounded 0–100 and explainable by its factors."
+      },
+      {
+        "q": "Why is recovery important — don't other systems stop at detection?",
+        "a": "Most systems stop once fraud is detected. For the bank, the outcome that matters is recovered funds. TGIE keeps going: it estimates the recoverable balance, shows where it still sits in the network, and tells the investigator which actions, in which order, give the best chance of getting it back before it leaves through a cash-out."
+      }
+    ]
+  }
+}

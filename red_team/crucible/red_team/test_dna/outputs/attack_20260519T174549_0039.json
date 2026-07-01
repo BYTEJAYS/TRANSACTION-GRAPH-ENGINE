@@ -1,0 +1,30 @@
+[
+  {
+    "from_account": "acc_9ea65eb649",
+    "to_account": "acc_086e65a5aa",
+    "amount": 11975,
+    "payment_rail": "ach_transfer",
+    "timestamp": "2026-05-01T10:00:00"
+  },
+  {
+    "from_account": "acc_798f5cb7ec",
+    "to_account": "acc_086e65a5aa",
+    "amount": 11051,
+    "payment_rail": "ach_transfer",
+    "timestamp": "2026-05-08T10:00:00"
+  },
+  {
+    "from_account": "acc_0b9f0df4e2",
+    "to_account": "acc_086e65a5aa",
+    "amount": 12102,
+    "payment_rail": "ach_transfer",
+    "timestamp": "2026-05-15T10:00:00"
+  },
+  {
+    "from_account": "acc_086e65a5aa",
+    "to_account": "acc_4056d5fd8b",
+    "amount": 34074,
+    "payment_rail": "ach_transfer",
+    "timestamp": "2026-05-15T10:00:00"
+  }
+]

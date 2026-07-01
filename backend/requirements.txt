@@ -1,0 +1,35 @@
+# ── Core API ────────────────────────────────────────────────────────────────
+fastapi==0.111.0
+uvicorn[standard]==0.29.0
+websockets==12.0
+python-multipart==0.0.9
+pydantic==2.7.1
+pydantic-settings==2.2.1
+
+# ── Async utilities ──────────────────────────────────────────────────────────
+aiofiles==23.2.1
+anyio==4.3.0
+httpx==0.27.0
+
+# ── Graph engine ─────────────────────────────────────────────────────────────
+networkx==3.3            # in-memory hot cache / live-demo projection
+scipy==1.13.0
+neo4j==5.23.0            # Phase 2+: persistent banking knowledge graph (graph source of truth)
+# Phase 3 persistence (added when wired): psycopg[binary]==3.2.x, redis==5.x
+
+# ── ML / Anomaly detection ───────────────────────────────────────────────────
+scikit-learn==1.4.2
+xgboost==2.0.3
+shap==0.45.1
+numpy==1.26.4
+pandas==2.2.2
+joblib==1.4.2
+
+# ── Evidence generation ───────────────────────────────────────────────────────
+reportlab==4.2.5
+
+# ── Utilities ────────────────────────────────────────────────────────────────
+python-dateutil==2.9.0
+faker==24.11.0
+orjson==3.10.3
+python-dotenv==1.0.1

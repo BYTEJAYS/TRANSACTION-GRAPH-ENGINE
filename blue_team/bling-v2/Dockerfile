@@ -1,0 +1,25 @@
+FROM python:3.11-slim
+
+WORKDIR /app
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    gcc \
+    libpq-dev \
+    && rm -rf /var/lib/apt/lists/*
+
+COPY requirements-gnn.txt requirements.txt ./
+# GNN deps first (CPU-only torch — 250MB vs 2GB CUDA). Must precede requirements.txt
+# so pip sees torch already satisfied and skips the heavier PyPI wheel.
+RUN pip install --no-cache-dir -r requirements-gnn.txt
+RUN pip install --no-cache-dir -r requirements.txt
+
+COPY . .
+
+# Non-root user — never run as root in production
+RUN adduser --disabled-password --gecos "" appuser \
+    && mkdir -p ml/models \
+    && chown -R appuser:appuser /app
+USER appuser
+
+EXPOSE 8000
+CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000", "--workers", "2"]
